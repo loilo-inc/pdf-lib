@@ -1,5 +1,5 @@
-import PDFObject from 'src/core/objects/PDFObject';
-import CharCodes from 'src/core/syntax/CharCodes';
+import PDFObject from "./PDFObject";
+import CharCodes from "../syntax/CharCodes";
 import {
   copyStringIntoBuffer,
   toHexStringOfMinLength,
@@ -8,8 +8,8 @@ import {
   pdfDocEncodingDecode,
   parseDate,
   hasUtf16BOM,
-} from 'src/utils';
-import { InvalidPDFDateStringError } from 'src/core/errors';
+} from "../../utils";
+import { InvalidPDFDateStringError } from "../errors";
 
 class PDFHexString extends PDFObject {
   static of = (value: string) => new PDFHexString(value);
@@ -17,7 +17,7 @@ class PDFHexString extends PDFObject {
   static fromText = (value: string) => {
     const encoded = utf16Encode(value);
 
-    let hex = '';
+    let hex = "";
     for (let idx = 0, len = encoded.length; idx < len; idx++) {
       hex += toHexStringOfMinLength(encoded[idx], 4);
     }
@@ -34,7 +34,7 @@ class PDFHexString extends PDFObject {
 
   asBytes(): Uint8Array {
     // Append a zero if the number of digits is odd. See PDF spec 7.3.4.3
-    const hex = this.value + (this.value.length % 2 === 1 ? '0' : '');
+    const hex = this.value + (this.value.length % 2 === 1 ? "0" : "");
     const hexLength = hex.length;
 
     const bytes = new Uint8Array(hex.length / 2);

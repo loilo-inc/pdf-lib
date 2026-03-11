@@ -1,10 +1,11 @@
-import fs from 'fs';
+import { describe, it, expect } from "vitest";
+import fs from "fs";
 
-import LZWStream from 'src/core/streams/LZWStream';
-import Stream from 'src/core/streams/Stream';
+import LZWStream from "../../../src/core/streams/LZWStream";
+import Stream from "../../../src/core/streams/Stream";
 
 const DIR = `tests/core/streams/data/lzw`;
-const FILES = ['1', '2', '3', '4'];
+const FILES = ["1", "2", "3", "4"];
 
 describe(`LZWStream`, () => {
   FILES.forEach((file) => {

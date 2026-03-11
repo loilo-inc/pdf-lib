@@ -1,38 +1,39 @@
-import fs from 'fs';
+import fs from "fs";
+import { describe, expect, it } from "vitest";
 import {
-  PDFDocument,
-  PDFName,
-  PDFArray,
-  PDFHexString,
   AnnotationFlags,
-} from 'src/index';
+  PDFArray,
+  PDFDocument,
+  PDFHexString,
+  PDFName,
+} from "../../../src/index";
 
-const fancyFieldsPdfBytes = fs.readFileSync('assets/pdfs/fancy_fields.pdf');
+const fancyFieldsPdfBytes = fs.readFileSync("assets/pdfs/fancy_fields.pdf");
 
 describe(`PDFRadioGroup`, () => {
   it(`can read its options`, async () => {
     const pdfDoc = await PDFDocument.load(fancyFieldsPdfBytes);
     const form = pdfDoc.getForm();
-    const historicalFigures = form.getRadioGroup('Historical Figures 🐺');
+    const historicalFigures = form.getRadioGroup("Historical Figures 🐺");
     expect(historicalFigures.getOptions()).toEqual([
-      'Marcus Aurelius 🏛️',
-      'Ada Lovelace 💻',
-      'Marie Curie ☢️',
-      'Alexander Hamilton 🇺🇸',
+      "Marcus Aurelius 🏛️",
+      "Ada Lovelace 💻",
+      "Marie Curie ☢️",
+      "Alexander Hamilton 🇺🇸",
     ]);
   });
 
   it(`can read its selected value`, async () => {
     const pdfDoc = await PDFDocument.load(fancyFieldsPdfBytes);
     const form = pdfDoc.getForm();
-    const historicalFigures = form.getRadioGroup('Historical Figures 🐺');
-    expect(historicalFigures.getSelected()).toEqual('Marcus Aurelius 🏛️');
+    const historicalFigures = form.getRadioGroup("Historical Figures 🐺");
+    expect(historicalFigures.getSelected()).toEqual("Marcus Aurelius 🏛️");
   });
 
   it(`can clear its value`, async () => {
     const pdfDoc = await PDFDocument.load(fancyFieldsPdfBytes);
     const form = pdfDoc.getForm();
-    const historicalFigures = form.getRadioGroup('Historical Figures 🐺');
+    const historicalFigures = form.getRadioGroup("Historical Figures 🐺");
     historicalFigures.clear();
     expect(historicalFigures.getSelected()).toBe(undefined);
   });
@@ -40,15 +41,15 @@ describe(`PDFRadioGroup`, () => {
   it(`can select a value`, async () => {
     const pdfDoc = await PDFDocument.load(fancyFieldsPdfBytes);
     const form = pdfDoc.getForm();
-    const historicalFigures = form.getRadioGroup('Historical Figures 🐺');
-    historicalFigures.select('Marie Curie ☢️');
-    expect(historicalFigures.getSelected()).toBe('Marie Curie ☢️');
+    const historicalFigures = form.getRadioGroup("Historical Figures 🐺");
+    historicalFigures.select("Marie Curie ☢️");
+    expect(historicalFigures.getSelected()).toBe("Marie Curie ☢️");
   });
 
   it(`can read its flag states`, async () => {
     const pdfDoc = await PDFDocument.load(fancyFieldsPdfBytes);
     const form = pdfDoc.getForm();
-    const historicalFigures = form.getRadioGroup('Historical Figures 🐺');
+    const historicalFigures = form.getRadioGroup("Historical Figures 🐺");
 
     expect(historicalFigures.isExported()).toBe(true);
     expect(historicalFigures.isReadOnly()).toBe(false);
@@ -62,13 +63,13 @@ describe(`PDFRadioGroup`, () => {
     const page = pdfDoc.addPage();
     const form = pdfDoc.getForm();
 
-    const radioGroup = form.createRadioGroup('test.group');
+    const radioGroup = form.createRadioGroup("test.group");
     radioGroup.enableMutualExclusion();
 
-    radioGroup.addOptionToPage('foo', page);
-    radioGroup.addOptionToPage('bar', page);
-    radioGroup.addOptionToPage('foo', page);
-    radioGroup.addOptionToPage('qux', page);
+    radioGroup.addOptionToPage("foo", page);
+    radioGroup.addOptionToPage("bar", page);
+    radioGroup.addOptionToPage("foo", page);
+    radioGroup.addOptionToPage("qux", page);
 
     const getOnWidgets = () =>
       radioGroup.acroField
@@ -77,30 +78,30 @@ describe(`PDFRadioGroup`, () => {
 
     expect(getOnWidgets().length).toBe(0);
 
-    radioGroup.select('foo');
+    radioGroup.select("foo");
 
     expect(getOnWidgets().length).toBe(1);
 
-    expect(radioGroup.getOptions()).toEqual(['foo', 'bar', 'foo', 'qux']);
+    expect(radioGroup.getOptions()).toEqual(["foo", "bar", "foo", "qux"]);
 
     const onValues = radioGroup.acroField
       .getWidgets()
       .map((w) => w.getOnValue());
 
     expect(onValues).toEqual([
-      PDFName.of('0'),
-      PDFName.of('1'),
-      PDFName.of('2'),
-      PDFName.of('3'),
+      PDFName.of("0"),
+      PDFName.of("1"),
+      PDFName.of("2"),
+      PDFName.of("3"),
     ]);
 
     const opt = radioGroup.acroField.Opt() as PDFArray;
     expect(opt).toBeInstanceOf(PDFArray);
     expect(opt.size()).toBe(4);
-    expect((opt.get(0) as PDFHexString).decodeText()).toBe('foo');
-    expect((opt.get(1) as PDFHexString).decodeText()).toBe('bar');
-    expect((opt.get(2) as PDFHexString).decodeText()).toBe('foo');
-    expect((opt.get(3) as PDFHexString).decodeText()).toBe('qux');
+    expect((opt.get(0) as PDFHexString).decodeText()).toBe("foo");
+    expect((opt.get(1) as PDFHexString).decodeText()).toBe("bar");
+    expect((opt.get(2) as PDFHexString).decodeText()).toBe("foo");
+    expect((opt.get(3) as PDFHexString).decodeText()).toBe("qux");
   });
 
   it(`supports mutualExclusion=false`, async () => {
@@ -108,13 +109,13 @@ describe(`PDFRadioGroup`, () => {
     const page = pdfDoc.addPage();
     const form = pdfDoc.getForm();
 
-    const radioGroup = form.createRadioGroup('test.group');
+    const radioGroup = form.createRadioGroup("test.group");
     radioGroup.disableMutualExclusion();
 
-    radioGroup.addOptionToPage('foo', page);
-    radioGroup.addOptionToPage('bar', page);
-    radioGroup.addOptionToPage('foo', page);
-    radioGroup.addOptionToPage('qux', page);
+    radioGroup.addOptionToPage("foo", page);
+    radioGroup.addOptionToPage("bar", page);
+    radioGroup.addOptionToPage("foo", page);
+    radioGroup.addOptionToPage("qux", page);
 
     const getOnWidgets = () =>
       radioGroup.acroField
@@ -123,30 +124,30 @@ describe(`PDFRadioGroup`, () => {
 
     expect(getOnWidgets().length).toBe(0);
 
-    radioGroup.select('foo');
+    radioGroup.select("foo");
 
     expect(getOnWidgets().length).toBe(2);
 
-    expect(radioGroup.getOptions()).toEqual(['foo', 'bar', 'foo', 'qux']);
+    expect(radioGroup.getOptions()).toEqual(["foo", "bar", "foo", "qux"]);
 
     const onValues = radioGroup.acroField
       .getWidgets()
       .map((w) => w.getOnValue());
 
     expect(onValues).toEqual([
-      PDFName.of('0'),
-      PDFName.of('1'),
-      PDFName.of('0'),
-      PDFName.of('3'),
+      PDFName.of("0"),
+      PDFName.of("1"),
+      PDFName.of("0"),
+      PDFName.of("3"),
     ]);
 
     const opt = radioGroup.acroField.Opt() as PDFArray;
     expect(opt).toBeInstanceOf(PDFArray);
     expect(opt.size()).toBe(4);
-    expect((opt.get(0) as PDFHexString).decodeText()).toBe('foo');
-    expect((opt.get(1) as PDFHexString).decodeText()).toBe('bar');
-    expect((opt.get(2) as PDFHexString).decodeText()).toBe('foo');
-    expect((opt.get(3) as PDFHexString).decodeText()).toBe('qux');
+    expect((opt.get(0) as PDFHexString).decodeText()).toBe("foo");
+    expect((opt.get(1) as PDFHexString).decodeText()).toBe("bar");
+    expect((opt.get(2) as PDFHexString).decodeText()).toBe("foo");
+    expect((opt.get(3) as PDFHexString).decodeText()).toBe("qux");
   });
 
   it(`produces printable widgets when added to a page`, async () => {
@@ -155,12 +156,12 @@ describe(`PDFRadioGroup`, () => {
 
     const form = pdfDoc.getForm();
 
-    const radioGroup = form.createRadioGroup('a.new.radio.group');
+    const radioGroup = form.createRadioGroup("a.new.radio.group");
 
     const widgets = () => radioGroup.acroField.getWidgets();
     expect(widgets().length).toBe(0);
 
-    radioGroup.addOptionToPage('foo', page);
+    radioGroup.addOptionToPage("foo", page);
     expect(widgets().length).toBe(1);
     expect(widgets()[0].hasFlag(AnnotationFlags.Print)).toBe(true);
   });
@@ -171,12 +172,12 @@ describe(`PDFRadioGroup`, () => {
 
     const form = pdfDoc.getForm();
 
-    const radioGroup = form.createRadioGroup('a.new.radio.group');
+    const radioGroup = form.createRadioGroup("a.new.radio.group");
 
     const widgets = () => radioGroup.acroField.getWidgets();
     expect(widgets().length).toBe(0);
 
-    radioGroup.addOptionToPage('foo', page);
+    radioGroup.addOptionToPage("foo", page);
     expect(widgets().length).toBe(1);
     expect(widgets()[0].P()).toBe(page.ref);
   });

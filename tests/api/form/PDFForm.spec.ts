@@ -1,19 +1,28 @@
-import fs from 'fs';
+import fs from "fs";
 import {
-  PDFDocument,
-  PDFTextField,
-  PDFCheckBox,
-  PDFButton,
-  PDFRadioGroup,
-  PDFOptionList,
-  PDFDropdown,
-  PDFWidgetAnnotation,
-  PDFDict,
-  PDFName,
-  PDFForm,
+  afterAll,
+  beforeAll,
+  beforeEach,
+  describe,
+  expect,
+  it,
+  vi,
+} from "vitest";
+import {
   PDFAcroForm,
+  PDFButton,
+  PDFCheckBox,
+  PDFDict,
+  PDFDocument,
+  PDFDropdown,
+  PDFForm,
+  PDFName,
+  PDFOptionList,
+  PDFRadioGroup,
   PDFRef,
-} from 'src/index';
+  PDFTextField,
+  PDFWidgetAnnotation,
+} from "../../../src/index";
 
 const getWidgets = (pdfDoc: PDFDocument) =>
   pdfDoc.context
@@ -22,8 +31,8 @@ const getWidgets = (pdfDoc: PDFDocument) =>
     .filter(
       (obj) =>
         obj instanceof PDFDict &&
-        obj.get(PDFName.of('Type')) === PDFName.of('Annot') &&
-        obj.get(PDFName.of('Subtype')) === PDFName.of('Widget'),
+        obj.get(PDFName.of("Type")) === PDFName.of("Annot") &&
+        obj.get(PDFName.of("Subtype")) === PDFName.of("Widget"),
     )
     .map((obj) => obj as PDFDict);
 
@@ -31,43 +40,43 @@ const getRefs = (pdfDoc: PDFDocument) =>
   pdfDoc.context.enumerateIndirectObjects().map(([ref]) => ref as PDFRef);
 
 const getApRefs = (widget: PDFWidgetAnnotation) => {
-  const onValue = widget.getOnValue() ?? PDFName.of('Yes');
+  const onValue = widget.getOnValue() ?? PDFName.of("Yes");
   const aps = widget.getAppearances();
   return [
     (aps?.normal as PDFDict).get(onValue),
     (aps?.rollover as PDFDict | undefined)?.get(onValue),
     (aps?.down as PDFDict | undefined)?.get(onValue),
-    (aps?.normal as PDFDict).get(PDFName.of('Off')),
-    (aps?.rollover as PDFDict | undefined)?.get(PDFName.of('Off')),
-    (aps?.down as PDFDict | undefined)?.get(PDFName.of('Off')),
+    (aps?.normal as PDFDict).get(PDFName.of("Off")),
+    (aps?.rollover as PDFDict | undefined)?.get(PDFName.of("Off")),
+    (aps?.down as PDFDict | undefined)?.get(PDFName.of("Off")),
   ].filter(Boolean);
 };
 
 const flatten = <T>(arr: T[][]): T[] =>
   arr.reduce((curr, acc) => [...acc, ...curr], []);
 
-const fancyFieldsPdfBytes = fs.readFileSync('assets/pdfs/fancy_fields.pdf');
+const fancyFieldsPdfBytes = fs.readFileSync("assets/pdfs/fancy_fields.pdf");
 // const sampleFormPdfBytes = fs.readFileSync('assets/pdfs/sample_form.pdf');
 // const combedPdfBytes = fs.readFileSync('assets/pdfs/with_combed_fields.pdf');
 // const dodPdfBytes = fs.readFileSync('assets/pdfs/dod_character.pdf');
-const xfaPdfBytes = fs.readFileSync('assets/pdfs/with_xfa_fields.pdf');
-const signaturePdfBytes = fs.readFileSync('assets/pdfs/with_signature.pdf');
+const xfaPdfBytes = fs.readFileSync("assets/pdfs/with_xfa_fields.pdf");
+const signaturePdfBytes = fs.readFileSync("assets/pdfs/with_signature.pdf");
 
 describe(`PDFForm`, () => {
   const origConsoleWarn = console.warn;
 
   beforeAll(() => {
     const ignoredWarnings = [
-      'Removing XFA form data as pdf-lib does not support reading or writing XFA',
+      "Removing XFA form data as pdf-lib does not support reading or writing XFA",
     ];
-    console.warn = jest.fn((...args) => {
+    console.warn = vi.fn((...args) => {
       const isIgnored = ignoredWarnings.find((iw) => args[0].includes(iw));
       if (!isIgnored) origConsoleWarn(...args);
     });
   });
 
   beforeEach(() => {
-    jest.clearAllMocks();
+    vi.clearAllMocks();
   });
 
   afterAll(() => {
@@ -124,18 +133,18 @@ describe(`PDFForm`, () => {
     const form = pdfDoc.getForm();
 
     // Get fields
-    const cb1 = form.getCheckBox('Are You A Fairy? 🌿');
-    const cb2 = form.getCheckBox('Is Your Power Level Over 9000? 💪');
-    const cb3 = form.getCheckBox('Can You Defeat Enemies In One Punch? 👊');
-    const cb4 = form.getCheckBox('Will You Ever Let Me Down? ☕️');
-    const rg1 = form.getRadioGroup('Historical Figures 🐺');
+    const cb1 = form.getCheckBox("Are You A Fairy? 🌿");
+    const cb2 = form.getCheckBox("Is Your Power Level Over 9000? 💪");
+    const cb3 = form.getCheckBox("Can You Defeat Enemies In One Punch? 👊");
+    const cb4 = form.getCheckBox("Will You Ever Let Me Down? ☕️");
+    const rg1 = form.getRadioGroup("Historical Figures 🐺");
 
     // Assert preconditions
     expect(cb1.isChecked()).toBe(true);
     expect(cb2.isChecked()).toBe(false);
     expect(cb3.isChecked()).toBe(true);
     expect(cb4.isChecked()).toBe(false);
-    expect(rg1.getSelected()).toEqual('Marcus Aurelius 🏛️');
+    expect(rg1.getSelected()).toEqual("Marcus Aurelius 🏛️");
 
     // Collect all existing appearance streams
     const fields = [cb1, cb2, cb3, cb4, rg1];
@@ -161,7 +170,7 @@ describe(`PDFForm`, () => {
     expect(flatten(widgets.map(getApRefs))).toEqual(originalAps);
 
     // (3) Change radio group value
-    rg1.select('Alexander Hamilton 🇺🇸');
+    rg1.select("Alexander Hamilton 🇺🇸");
 
     // (3) Run appearance update
     form.updateFieldAppearances();
@@ -177,17 +186,17 @@ describe(`PDFForm`, () => {
 
     const form = pdfDoc.getForm();
 
-    const btn = form.createButton('a.button.field');
-    const cb = form.createCheckBox('a.checkbox.field');
-    const dd = form.createDropdown('a.dropdown.field');
-    const ol = form.createOptionList('a.optionlist.field');
-    const tf = form.createTextField('a.text.field');
+    const btn = form.createButton("a.button.field");
+    const cb = form.createCheckBox("a.checkbox.field");
+    const dd = form.createDropdown("a.dropdown.field");
+    const ol = form.createOptionList("a.optionlist.field");
+    const tf = form.createTextField("a.text.field");
 
     // Skipping Radio Groups for this test as they _must_ have APs or else the
     // value represented by each radio button is undefined.
     //   const rg = form.createRadioGroup('a.radiogroup.field');
 
-    btn.addToPage('foo', page);
+    btn.addToPage("foo", page);
     cb.addToPage(page);
     dd.addToPage(page);
     ol.addToPage(page);
@@ -198,11 +207,11 @@ describe(`PDFForm`, () => {
 
     expect(widgets.length).toBe(5);
 
-    const aps = () => widgets.filter((w) => w.has(PDFName.of('AP'))).length;
+    const aps = () => widgets.filter((w) => w.has(PDFName.of("AP"))).length;
 
     expect(aps()).toBe(5);
 
-    widgets.forEach((w) => w.delete(PDFName.of('AP')));
+    widgets.forEach((w) => w.delete(PDFName.of("AP")));
 
     expect(aps()).toBe(0);
 
@@ -214,9 +223,9 @@ describe(`PDFForm`, () => {
   it(`removes XFA entries when it is accessed`, async () => {
     const pdfDoc = await PDFDocument.load(xfaPdfBytes);
     const acroForm = pdfDoc.catalog.getOrCreateAcroForm();
-    expect(acroForm.dict.has(PDFName.of('XFA'))).toBe(true);
+    expect(acroForm.dict.has(PDFName.of("XFA"))).toBe(true);
     expect(pdfDoc.getForm()).toBeInstanceOf(PDFForm);
-    expect(acroForm.dict.has(PDFName.of('XFA'))).toBe(false);
+    expect(acroForm.dict.has(PDFName.of("XFA"))).toBe(false);
   });
 
   it(`is only created if it is accessed`, async () => {
@@ -232,10 +241,10 @@ describe(`PDFForm`, () => {
     const widgets = getWidgets(pdfDoc);
     expect(widgets.length).toBe(24);
 
-    const aps = () => widgets.filter((w) => w.has(PDFName.of('AP'))).length;
+    const aps = () => widgets.filter((w) => w.has(PDFName.of("AP"))).length;
     expect(aps()).toBe(24);
 
-    widgets.forEach((w) => w.delete(PDFName.of('AP')));
+    widgets.forEach((w) => w.delete(PDFName.of("AP")));
     expect(aps()).toBe(0);
 
     await pdfDoc.save({ updateFieldAppearances: true });
@@ -248,10 +257,10 @@ describe(`PDFForm`, () => {
     const widgets = getWidgets(pdfDoc);
     expect(widgets.length).toBe(24);
 
-    const aps = () => widgets.filter((w) => w.has(PDFName.of('AP'))).length;
+    const aps = () => widgets.filter((w) => w.has(PDFName.of("AP"))).length;
     expect(aps()).toBe(24);
 
-    widgets.forEach((w) => w.delete(PDFName.of('AP')));
+    widgets.forEach((w) => w.delete(PDFName.of("AP")));
     expect(aps()).toBe(0);
 
     const form = pdfDoc.getForm();
@@ -267,10 +276,10 @@ describe(`PDFForm`, () => {
     const widgets = getWidgets(pdfDoc);
     expect(widgets.length).toBe(24);
 
-    const aps = () => widgets.filter((w) => w.has(PDFName.of('AP'))).length;
+    const aps = () => widgets.filter((w) => w.has(PDFName.of("AP"))).length;
     expect(aps()).toBe(24);
 
-    widgets.forEach((w) => w.delete(PDFName.of('AP')));
+    widgets.forEach((w) => w.delete(PDFName.of("AP")));
     expect(aps()).toBe(0);
 
     const form = pdfDoc.getForm();
@@ -290,7 +299,7 @@ describe(`PDFForm`, () => {
 
     expect(() => form.updateFieldAppearances()).not.toThrow();
 
-    expect(
+    await expect(
       pdfDoc.save({ updateFieldAppearances: true }),
     ).resolves.toBeInstanceOf(Uint8Array);
   });
@@ -301,8 +310,8 @@ describe(`PDFForm`, () => {
 
     const refs1 = getRefs(pdfDoc);
 
-    const cb = form.getCheckBox('Will You Ever Let Me Down? ☕️');
-    const rg = form.getRadioGroup('Historical Figures 🐺');
+    const cb = form.getCheckBox("Will You Ever Let Me Down? ☕️");
+    const rg = form.getRadioGroup("Historical Figures 🐺");
 
     const cbWidgetRefs = cb.acroField.normalizedEntries().Kids.asArray();
     const rgWidgetRefs = cb.acroField.normalizedEntries().Kids.asArray();
@@ -333,8 +342,8 @@ describe(`PDFForm`, () => {
     const page = pdfDoc.addPage();
     const form = pdfDoc.getForm();
 
-    const cb = form.createCheckBox('a.new.check.box');
-    const tf = form.createTextField('a.new.text.field');
+    const cb = form.createCheckBox("a.new.check.box");
+    const tf = form.createTextField("a.new.text.field");
 
     cb.addToPage(page);
     tf.addToPage(page);

@@ -1,3 +1,4 @@
+import { describe, it, expect } from "vitest";
 import {
   PDFCatalog,
   PDFContext,
@@ -6,7 +7,7 @@ import {
   PDFPageLeaf,
   PDFPageTree,
   PDFRef,
-} from 'src/index';
+} from "../../../src/index";
 
 describe(`PDFCatalog`, () => {
   it(`can be constructed directly from a Map and PDFContext`, () => {
@@ -15,8 +16,8 @@ describe(`PDFCatalog`, () => {
     const catalog = PDFCatalog.fromMapWithContext(dict, context);
 
     expect(catalog).toBeInstanceOf(PDFCatalog);
-    expect(catalog.get(PDFName.of('Type'))).toBeUndefined();
-    expect(catalog.get(PDFName.of('Pages'))).toBeUndefined();
+    expect(catalog.get(PDFName.of("Type"))).toBeUndefined();
+    expect(catalog.get(PDFName.of("Pages"))).toBeUndefined();
   });
 
   it(`is constructed with the correct Type and entries`, () => {
@@ -25,8 +26,8 @@ describe(`PDFCatalog`, () => {
     const catalog = PDFCatalog.withContextAndPages(context, pagesRef);
 
     expect(catalog).toBeInstanceOf(PDFCatalog);
-    expect(catalog.get(PDFName.of('Type'))).toBe(PDFName.of('Catalog'));
-    expect(catalog.get(PDFName.of('Pages'))).toBe(pagesRef);
+    expect(catalog.get(PDFName.of("Type"))).toBe(PDFName.of("Catalog"));
+    expect(catalog.get(PDFName.of("Pages"))).toBe(pagesRef);
   });
 
   it(`returns its Pages entry value when it's a reference`, () => {

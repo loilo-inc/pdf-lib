@@ -1,17 +1,17 @@
-import { Assets } from '..';
+import { Assets } from "..";
 import {
-  PDFDocument,
-  StandardFonts,
-  drawRectangle,
-  rgb,
   degrees,
-  drawText,
-  PDFFont,
   drawEllipse,
+  drawRectangle,
+  drawText,
+  PDFDocument,
+  PDFFont,
   PDFWidgetAnnotation,
-} from '../../..';
+  rgb,
+  StandardFonts,
+} from "../../../src";
 
-import fontkit from '@pdf-lib/fontkit';
+import fontkit from "@pdf-lib/fontkit";
 
 export default async (assets: Assets) => {
   const pdfDoc = await PDFDocument.load(assets.pdfs.fancy_fields);
@@ -22,73 +22,73 @@ export default async (assets: Assets) => {
   const form = pdfDoc.getForm();
 
   // Text Fields
-  const prefix = form.getTextField('Prefix ⚽️');
+  const prefix = form.getTextField("Prefix ⚽️");
   prefix.updateAppearances(ubuntuFont);
 
-  const firstName = form.getTextField('First Name 🚀');
+  const firstName = form.getTextField("First Name 🚀");
   firstName.updateAppearances(ubuntuFont);
 
-  const middleInitial = form.getTextField('MiddleInitial 🎳');
+  const middleInitial = form.getTextField("MiddleInitial 🎳");
   middleInitial.updateAppearances(ubuntuFont);
 
-  const lastName = form.getTextField('LastName 🛩');
+  const lastName = form.getTextField("LastName 🛩");
   lastName.updateAppearances(ubuntuFont);
 
   // Check Boxes
-  const isAFairy = form.getCheckBox('Are You A Fairy? 🌿');
+  const isAFairy = form.getCheckBox("Are You A Fairy? 🌿");
   isAFairy.updateAppearances();
 
   const isPowerLevelOver9000 = form.getCheckBox(
-    'Is Your Power Level Over 9000? 💪',
+    "Is Your Power Level Over 9000? 💪",
   );
   isPowerLevelOver9000.updateAppearances();
 
-  const onePunch = form.getCheckBox('Can You Defeat Enemies In One Punch? 👊');
+  const onePunch = form.getCheckBox("Can You Defeat Enemies In One Punch? 👊");
   onePunch.updateAppearances();
 
-  const everLetMeDown = form.getCheckBox('Will You Ever Let Me Down? ☕️');
+  const everLetMeDown = form.getCheckBox("Will You Ever Let Me Down? ☕️");
   everLetMeDown.updateAppearances();
 
   // Buttons
-  const eject = form.getButton('Eject 📼');
+  const eject = form.getButton("Eject 📼");
   eject.updateAppearances(ubuntuFont);
 
-  const submit = form.getButton('Submit 📝');
+  const submit = form.getButton("Submit 📝");
   submit.updateAppearances(ubuntuFont);
 
-  const play = form.getButton('Play ▶️');
+  const play = form.getButton("Play ▶️");
   play.updateAppearances(ubuntuFont);
 
-  const launch = form.getButton('Launch 🚀');
+  const launch = form.getButton("Launch 🚀");
   launch.updateAppearances(ubuntuFont);
 
   // Radio Group
-  const historicalFigures = form.getRadioGroup('Historical Figures 🐺');
+  const historicalFigures = form.getRadioGroup("Historical Figures 🐺");
   historicalFigures.updateAppearances();
 
   // Option List
-  const planets = form.getOptionList('Which Are Planets? 🌎');
+  const planets = form.getOptionList("Which Are Planets? 🌎");
   planets.updateAppearances(ubuntuFont);
 
   // Dropdown
-  const gundams = form.getDropdown('Choose A Gundam 🤖');
-  gundams.select('One Punch Man');
+  const gundams = form.getDropdown("Choose A Gundam 🤖");
+  gundams.select("One Punch Man");
   gundams.updateAppearances(ubuntuFont);
 
   // ===================== Custom Appearance Providers ========================
   const page = pdfDoc.addPage();
   const symbol = await pdfDoc.embedFont(StandardFonts.Symbol);
 
-  const btn = form.createButton('custom.button.field');
-  const cb = form.createCheckBox('custom.checkbox.field');
-  const dd = form.createDropdown('custom.dropdown.field');
-  const ol = form.createOptionList('custom.optionlist.field');
-  const rg = form.createRadioGroup('custom.radiogroup.field');
-  const tf = form.createTextField('custom.text.field');
-  const tfFontSize = form.createTextField('custom.text.fieldFontSize');
+  const btn = form.createButton("custom.button.field");
+  const cb = form.createCheckBox("custom.checkbox.field");
+  const dd = form.createDropdown("custom.dropdown.field");
+  const ol = form.createOptionList("custom.optionlist.field");
+  const rg = form.createRadioGroup("custom.radiogroup.field");
+  const tf = form.createTextField("custom.text.field");
+  const tfFontSize = form.createTextField("custom.text.fieldFontSize");
 
-  dd.addOptions('∑');
-  ol.addOptions('∑');
+  dd.addOptions("∑");
+  ol.addOptions("∑");
 
   const width = 100;
   const height = 50;
@@ -96,7 +96,7 @@ export default async (assets: Assets) => {
   let y = page.getHeight();
 
   y -= height + 25;
-  btn.addToPage('∑', page, { x, y, width, height, font: symbol });
+  btn.addToPage("∑", page, { x, y, width, height, font: symbol });
   y -= height + 25;
   cb.addToPage(page, { x, y, width, height });
   y -= height + 25;
@@ -104,7 +104,7 @@ export default async (assets: Assets) => {
   y -= height + 25;
   ol.addToPage(page, { x, y, width, height, font: symbol });
   y -= height + 25;
-  rg.addOptionToPage('bar', page, { x, y, width, height });
+  rg.addOptionToPage("bar", page, { x, y, width, height });
   y -= height + 25;
   tf.addToPage(page, { x, y, width, height, font: symbol });
   y -= height * 4 + 25;
@@ -117,7 +117,7 @@ export default async (assets: Assets) => {
   });
   tfFontSize.enableMultiline();
   tfFontSize.setFontSize(71.999);
-  tfFontSize.setText('This text should be huge');
+  tfFontSize.setText("This text should be huge");
 
   const rectangle = drawRectangle({
     x: 0,
@@ -143,8 +143,8 @@ export default async (assets: Assets) => {
     rotate: degrees(0),
   });
 
-  const text = symbol.encodeText('ℑ');
-  const textW = symbol.widthOfTextAtSize('ℑ', 35);
+  const text = symbol.encodeText("ℑ");
+  const textW = symbol.widthOfTextAtSize("ℑ", 35);
   const textH = symbol.heightAtSize(35);
   const symbolText = (font: PDFFont) =>
     drawText(text, {
@@ -158,8 +158,8 @@ export default async (assets: Assets) => {
       ySkew: degrees(0),
     });
 
-  const assert = (condition: boolean, msg = '') => {
-    if (!condition) throw new Error(msg || 'Assertion failed');
+  const assert = (condition: boolean, msg = "") => {
+    if (!condition) throw new Error(msg || "Assertion failed");
   };
 
   btn.updateAppearances(symbol, (field, widget, font) => {

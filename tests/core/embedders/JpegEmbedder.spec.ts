@@ -1,9 +1,15 @@
-import fs from 'fs';
-import { JpegEmbedder, PDFContext, PDFRawStream, PDFRef } from 'src/core';
+import { describe, it, expect } from "vitest";
+import fs from "fs";
+import {
+  JpegEmbedder,
+  PDFContext,
+  PDFRawStream,
+  PDFRef,
+} from "../../../src/core";
 
-const catUnicornJpg = fs.readFileSync('./assets/images/cat_riding_unicorn.jpg');
-const minionsLaughing = fs.readFileSync('./assets/images/minions_laughing.jpg');
-const cmykJpg = fs.readFileSync('./assets/images/cmyk_colorspace.jpg');
+const catUnicornJpg = fs.readFileSync("./assets/images/cat_riding_unicorn.jpg");
+const minionsLaughing = fs.readFileSync("./assets/images/minions_laughing.jpg");
+const cmykJpg = fs.readFileSync("./assets/images/cmyk_colorspace.jpg");
 
 describe(`JpegEmbedder`, () => {
   it(`can be constructed with JpegEmbedder.for(...)`, async () => {
@@ -39,7 +45,7 @@ describe(`JpegEmbedder`, () => {
     expect(embedder.bitsPerComponent).toBe(8);
     expect(embedder.height).toBe(1080);
     expect(embedder.width).toBe(1920);
-    expect(embedder.colorSpace).toBe('DeviceRGB');
+    expect(embedder.colorSpace).toBe("DeviceRGB");
   });
 
   it(`can extract properties of JPEG images (2)`, async () => {
@@ -48,7 +54,7 @@ describe(`JpegEmbedder`, () => {
     expect(embedder.bitsPerComponent).toBe(8);
     expect(embedder.height).toBe(354);
     expect(embedder.width).toBe(630);
-    expect(embedder.colorSpace).toBe('DeviceRGB');
+    expect(embedder.colorSpace).toBe("DeviceRGB");
   });
 
   it(`can extract properties of JPEG images (3)`, async () => {
@@ -57,6 +63,6 @@ describe(`JpegEmbedder`, () => {
     expect(embedder.bitsPerComponent).toBe(8);
     expect(embedder.height).toBe(333);
     expect(embedder.width).toBe(500);
-    expect(embedder.colorSpace).toBe('DeviceCMYK');
+    expect(embedder.colorSpace).toBe("DeviceCMYK");
   });
 });

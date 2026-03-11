@@ -1,14 +1,11 @@
-import PDFContext from 'src/core/PDFContext';
-import PDFDict from 'src/core/objects/PDFDict';
-import PDFArray from 'src/core/objects/PDFArray';
-import PDFName from 'src/core/objects/PDFName';
-import PDFRef from 'src/core/objects/PDFRef';
-import PDFAcroField from 'src/core/acroform/PDFAcroField';
-import PDFAcroNonTerminal from 'src/core/acroform/PDFAcroNonTerminal';
-import {
-  createPDFAcroField,
-  createPDFAcroFields,
-} from 'src/core/acroform/utils';
+import PDFContext from "../PDFContext";
+import PDFDict from "../objects/PDFDict";
+import PDFArray from "../objects/PDFArray";
+import PDFName from "../objects/PDFName";
+import PDFRef from "../objects/PDFRef";
+import PDFAcroField from "./PDFAcroField";
+import PDFAcroNonTerminal from "./PDFAcroNonTerminal";
+import { createPDFAcroField, createPDFAcroFields } from "./utils";
 
 class PDFAcroForm {
   readonly dict: PDFDict;
@@ -25,7 +22,7 @@ class PDFAcroForm {
   }
 
   Fields(): PDFArray | undefined {
-    const fields = this.dict.lookup(PDFName.of('Fields'));
+    const fields = this.dict.lookup(PDFName.of("Fields"));
     if (fields instanceof PDFArray) return fields;
     return undefined;
   }
@@ -92,7 +89,7 @@ class PDFAcroForm {
 
     if (!Fields) {
       Fields = this.dict.context.obj([]);
-      this.dict.set(PDFName.of('Fields'), Fields);
+      this.dict.set(PDFName.of("Fields"), Fields);
     }
 
     return { Fields };

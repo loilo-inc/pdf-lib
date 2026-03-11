@@ -1,38 +1,38 @@
-import { Assets } from '..';
-import { PDFDocument, StandardFonts, PDFFont } from '../../..';
+import { Assets } from "..";
+import { PDFDocument, PDFFont, StandardFonts } from "../../../src";
 
 // prettier-ignore
 const winAnsiCodePoints = [
-  0x0020, 0x0021, 0x0022, 0x0023, 0x0024, 0x0025, 0x0026, 0x0027, 0x0028, 
-  0x0029, 0x002a, 0x002b, 0x002c, 0x002d, 0x002e, 0x002f, 0x0030, 0x0031, 
-  0x0032, 0x0033, 0x0034, 0x0035, 0x0036, 0x0037, 0x0038, 0x0039, 0x003a, 
-  0x003b, 0x003c, 0x003d, 0x003e, 0x003f, 0x0040, 0x0041, 0x0042, 0x0043, 
-  0x0044, 0x0045, 0x0046, 0x0047, 0x0048, 0x0049, 0x004a, 0x004b, 0x004c, 
-  0x004d, 0x004e, 0x004f, 0x0050, 0x0051, 0x0052, 0x0053, 0x0054, 0x0055, 
-  0x0056, 0x0057, 0x0058, 0x0059, 0x005a, 0x005b, 0x005c, 0x005d, 0x005e, 
-  0x005f, 0x0060, 0x0061, 0x0062, 0x0063, 0x0064, 0x0065, 0x0066, 0x0067, 
-  0x0068, 0x0069, 0x006a, 0x006b, 0x006c, 0x006d, 0x006e, 0x006f, 0x0070, 
-  0x0071, 0x0072, 0x0073, 0x0074, 0x0075, 0x0076, 0x0077, 0x0078, 0x0079, 
-  0x007a, 0x007b, 0x007c, 0x007d, 0x007e, 0x00a0, 0x00a1, 0x00a2, 0x00a3, 
-  0x00a4, 0x00a5, 0x00a6, 0x00a7, 0x00a8, 0x00a9, 0x00aa, 0x00ab, 0x00ac, 
-  0x00ad, 0x00ae, 0x00af, 0x00b0, 0x00b1, 0x00b2, 0x00b3, 0x00b4, 0x00b5, 
-  0x00b6, 0x00b7, 0x00b8, 0x00b9, 0x00ba, 0x00bb, 0x00bc, 0x00bd, 0x00be, 
-  0x00bf, 0x00c0, 0x00c1, 0x00c2, 0x00c3, 0x00c4, 0x00c5, 0x00c6, 0x00c7, 
-  0x00c8, 0x00c9, 0x00ca, 0x00cb, 0x00cc, 0x00cd, 0x00ce, 0x00cf, 0x00d0, 
-  0x00d1, 0x00d2, 0x00d3, 0x00d4, 0x00d5, 0x00d6, 0x00d7, 0x00d8, 0x00d9, 
-  0x00da, 0x00db, 0x00dc, 0x00dd, 0x00de, 0x00df, 0x00e0, 0x00e1, 0x00e2, 
-  0x00e3, 0x00e4, 0x00e5, 0x00e6, 0x00e7, 0x00e8, 0x00e9, 0x00ea, 0x00eb, 
-  0x00ec, 0x00ed, 0x00ee, 0x00ef, 0x00f0, 0x00f1, 0x00f2, 0x00f3, 0x00f4, 
-  0x00f5, 0x00f6, 0x00f7, 0x00f8, 0x00f9, 0x00fa, 0x00fb, 0x00fc, 0x00fd, 
-  0x00fe, 0x00ff, 0x0152, 0x0153, 0x0160, 0x0161, 0x0178, 0x017d, 0x017e, 
-  0x0192, 0x02c6, 0x02dc, 0x2013, 0x2014, 0x2018, 0x2019, 0x201a, 0x201c, 
-  0x201d, 0x201e, 0x2020, 0x2021, 0x2022, 0x2026, 0x2030, 0x2039, 0x203a, 
+  0x0020, 0x0021, 0x0022, 0x0023, 0x0024, 0x0025, 0x0026, 0x0027, 0x0028,
+  0x0029, 0x002a, 0x002b, 0x002c, 0x002d, 0x002e, 0x002f, 0x0030, 0x0031,
+  0x0032, 0x0033, 0x0034, 0x0035, 0x0036, 0x0037, 0x0038, 0x0039, 0x003a,
+  0x003b, 0x003c, 0x003d, 0x003e, 0x003f, 0x0040, 0x0041, 0x0042, 0x0043,
+  0x0044, 0x0045, 0x0046, 0x0047, 0x0048, 0x0049, 0x004a, 0x004b, 0x004c,
+  0x004d, 0x004e, 0x004f, 0x0050, 0x0051, 0x0052, 0x0053, 0x0054, 0x0055,
+  0x0056, 0x0057, 0x0058, 0x0059, 0x005a, 0x005b, 0x005c, 0x005d, 0x005e,
+  0x005f, 0x0060, 0x0061, 0x0062, 0x0063, 0x0064, 0x0065, 0x0066, 0x0067,
+  0x0068, 0x0069, 0x006a, 0x006b, 0x006c, 0x006d, 0x006e, 0x006f, 0x0070,
+  0x0071, 0x0072, 0x0073, 0x0074, 0x0075, 0x0076, 0x0077, 0x0078, 0x0079,
+  0x007a, 0x007b, 0x007c, 0x007d, 0x007e, 0x00a0, 0x00a1, 0x00a2, 0x00a3,
+  0x00a4, 0x00a5, 0x00a6, 0x00a7, 0x00a8, 0x00a9, 0x00aa, 0x00ab, 0x00ac,
+  0x00ad, 0x00ae, 0x00af, 0x00b0, 0x00b1, 0x00b2, 0x00b3, 0x00b4, 0x00b5,
+  0x00b6, 0x00b7, 0x00b8, 0x00b9, 0x00ba, 0x00bb, 0x00bc, 0x00bd, 0x00be,
+  0x00bf, 0x00c0, 0x00c1, 0x00c2, 0x00c3, 0x00c4, 0x00c5, 0x00c6, 0x00c7,
+  0x00c8, 0x00c9, 0x00ca, 0x00cb, 0x00cc, 0x00cd, 0x00ce, 0x00cf, 0x00d0,
+  0x00d1, 0x00d2, 0x00d3, 0x00d4, 0x00d5, 0x00d6, 0x00d7, 0x00d8, 0x00d9,
+  0x00da, 0x00db, 0x00dc, 0x00dd, 0x00de, 0x00df, 0x00e0, 0x00e1, 0x00e2,
+  0x00e3, 0x00e4, 0x00e5, 0x00e6, 0x00e7, 0x00e8, 0x00e9, 0x00ea, 0x00eb,
+  0x00ec, 0x00ed, 0x00ee, 0x00ef, 0x00f0, 0x00f1, 0x00f2, 0x00f3, 0x00f4,
+  0x00f5, 0x00f6, 0x00f7, 0x00f8, 0x00f9, 0x00fa, 0x00fb, 0x00fc, 0x00fd,
+  0x00fe, 0x00ff, 0x0152, 0x0153, 0x0160, 0x0161, 0x0178, 0x017d, 0x017e,
+  0x0192, 0x02c6, 0x02dc, 0x2013, 0x2014, 0x2018, 0x2019, 0x201a, 0x201c,
+  0x201d, 0x201e, 0x2020, 0x2021, 0x2022, 0x2026, 0x2030, 0x2039, 0x203a,
   0x20ac, 0x2122,
 ];
 
 const winAnsiString = String.fromCodePoint(...winAnsiCodePoints)
-  .split('')
-  .join(' ');
+  .split("")
+  .join(" ");
 
 // prettier-ignore
 const zapfDingbatsCodePoints = [
@@ -62,8 +62,8 @@ const zapfDingbatsCodePoints = [
 ];
 
 const zapfDingbatsString = String.fromCodePoint(...zapfDingbatsCodePoints)
-  .split('')
-  .join(' ');
+  .split("")
+  .join(" ");
 
 // prettier-ignore
 const symbolCodePoints = [
@@ -92,8 +92,8 @@ const symbolCodePoints = [
 ];
 
 const symbolString = String.fromCodePoint(...symbolCodePoints)
-  .split('')
-  .join(' ');
+  .split("")
+  .join(" ");
 
 const addPageWithFonts = (
   pdfDoc: PDFDocument,
@@ -115,7 +115,7 @@ const addPageWithFonts = (
       x: 650 / 2 - font.widthOfTextAtSize(fontName, fontSize) / 2,
     });
     page.moveTo(0, page.getY() - font.heightAtSize(fontSize) - 10);
-    page.drawText(lines.join('\n'), {
+    page.drawText(lines.join("\n"), {
       font,
       size: fontSize,
       x: 25,
@@ -138,12 +138,12 @@ const breakTextIntoLines = (
   const lines: string[] = [];
   let textIdx = 0;
   while (textIdx < text.length) {
-    let line = '';
+    let line = "";
     while (textIdx < text.length) {
-      if (text.charAt(textIdx) === '\n') {
+      if (text.charAt(textIdx) === "\n") {
         lines.push(line);
         textIdx += 1;
-        line = '';
+        line = "";
         continue;
       }
       const newLine = line + text.charAt(textIdx);
@@ -162,10 +162,10 @@ export default async (_assets: Assets) => {
   const helveticaFont = await pdfDoc.embedFont(StandardFonts.Helvetica);
   const helveticaBoldFont = await pdfDoc.embedFont(StandardFonts.HelveticaBold);
 
-  const title = 'Standard 14 Fonts Demo';
+  const title = "Standard 14 Fonts Demo";
   const description = `
-    The PDF specification requires that PDF readers provide 14 standard fonts. 
-    PDF documents may use these fonts without having to embed the fonts 
+    The PDF specification requires that PDF readers provide 14 standard fonts.
+    PDF documents may use these fonts without having to embed the fonts
     themselves in the document. The fonts are as follows:
 
       • Times Roman (serif) in regular, bold, italic, and bold italic variants.
@@ -175,16 +175,16 @@ export default async (_assets: Assets) => {
       • Symbol (symbolic) in regular variant.
 
     The Times Roman, Helvetica, and Courier fonts use WinAnsi encoding
-    (Windows-1252). ZapfDingbats and Symbol each use their own special 
-    encodings. 
+    (Windows-1252). ZapfDingbats and Symbol each use their own special
+    encodings.
 
-    Note that none of these fonts support anything near the entire Unicode 
+    Note that none of these fonts support anything near the entire Unicode
     character set. The WinAnsi fonts include most glyphs in the Latin alphabet.
-    The ZapfDingbat font includes an odd assortment of glyphs that don't below 
-    to any particular language or region. And the Symbol font includes 
+    The ZapfDingbat font includes an odd assortment of glyphs that don't below
+    to any particular language or region. And the Symbol font includes
     mathematical symbols and glyphs for the greek alphabet.
-    
-    The following pages contain examples of each of the standard 14 fonts. Each 
+
+    The following pages contain examples of each of the standard 14 fonts. Each
     glyph supported by a given font's encoding is rendered to the page under a
     header naming the font in use.`;
 
@@ -203,7 +203,7 @@ export default async (_assets: Assets) => {
     x: 650 / 2 - helveticaBoldFont.widthOfTextAtSize(title, 35) / 2,
     lineHeight: 35,
   });
-  titlePage.drawText(descriptionLines.join('\n'), {
+  titlePage.drawText(descriptionLines.join("\n"), {
     font: helveticaFont,
     size: 16,
     y: 525,
@@ -249,15 +249,15 @@ export default async (_assets: Assets) => {
   page.moveTo(0, 700);
 
   page.moveDown(100);
-  page.drawText('ZapfDingbats', {
+  page.drawText("ZapfDingbats", {
     font: helveticaFont,
     size: zapfDingbatsFontSize,
     x:
       650 / 2 -
-      helveticaFont.widthOfTextAtSize('ZapfDingbats', zapfDingbatsFontSize) / 2,
+      helveticaFont.widthOfTextAtSize("ZapfDingbats", zapfDingbatsFontSize) / 2,
   });
   page.moveDown(zapfDingbatsFont.heightAtSize(zapfDingbatsFontSize) + 10);
-  page.drawText(zapfDingbatsLines.join('\n'), {
+  page.drawText(zapfDingbatsLines.join("\n"), {
     font: zapfDingbatsFont,
     size: zapfDingbatsFontSize,
     x: 25,
@@ -275,13 +275,13 @@ export default async (_assets: Assets) => {
   );
 
   page.moveDown(275);
-  page.drawText('Symbol', {
+  page.drawText("Symbol", {
     font: helveticaFont,
     size: symbolFontSize,
-    x: 650 / 2 - helveticaFont.widthOfTextAtSize('Symbol', symbolFontSize) / 2,
+    x: 650 / 2 - helveticaFont.widthOfTextAtSize("Symbol", symbolFontSize) / 2,
   });
   page.moveDown(symbolFont.heightAtSize(symbolFontSize) + 10);
-  page.drawText(symbolLines.join('\n'), {
+  page.drawText(symbolLines.join("\n"), {
     font: symbolFont,
     size: symbolFontSize,
     x: 25,

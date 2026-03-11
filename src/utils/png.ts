@@ -1,4 +1,4 @@
-import UPNG from '@pdf-lib/upng';
+import UPNG from "@pdf-lib/upng";
 
 const getImageType = (ctype: number) => {
   if (ctype === 0) return PngType.Greyscale;
@@ -30,11 +30,11 @@ const splitAlphaChannel = (rgbaChannel: Uint8Array) => {
 };
 
 export enum PngType {
-  Greyscale = 'Greyscale',
-  Truecolour = 'Truecolour',
-  IndexedColour = 'IndexedColour',
-  GreyscaleWithAlpha = 'GreyscaleWithAlpha',
-  TruecolourWithAlpha = 'TruecolourWithAlpha',
+  Greyscale = "Greyscale",
+  Truecolour = "Truecolour",
+  IndexedColour = "IndexedColour",
+  GreyscaleWithAlpha = "GreyscaleWithAlpha",
+  TruecolourWithAlpha = "TruecolourWithAlpha",
 }
 
 export class PNG {
@@ -48,7 +48,7 @@ export class PNG {
   readonly bitsPerComponent: number;
 
   private constructor(pngData: Uint8Array) {
-    const upng = UPNG.decode(pngData);
+    const upng = UPNG.decode(new Uint8Array(pngData).buffer);
     const frames = UPNG.toRGBA8(upng);
 
     if (frames.length > 1) throw new Error(`Animated PNGs are not supported`);

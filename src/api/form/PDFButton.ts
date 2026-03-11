@@ -1,27 +1,27 @@
-import PDFDocument from 'src/api/PDFDocument';
-import PDFPage from 'src/api/PDFPage';
-import PDFFont from 'src/api/PDFFont';
-import PDFImage from 'src/api/PDFImage';
-import { ImageAlignment } from 'src/api/image/alignment';
+import PDFDocument from "../PDFDocument";
+import PDFPage from "../PDFPage";
+import PDFFont from "../PDFFont";
+import PDFImage from "../PDFImage";
+import { ImageAlignment } from "../image/alignment";
 import {
   AppearanceProviderFor,
   normalizeAppearance,
   defaultButtonAppearanceProvider,
-} from 'src/api/form/appearances';
+} from "./appearances";
 import PDFField, {
   FieldAppearanceOptions,
   assertFieldAppearanceOptions,
-} from 'src/api/form/PDFField';
-import { rgb } from 'src/api/colors';
-import { degrees } from 'src/api/rotations';
+} from "./PDFField";
+import { rgb } from "../colors";
+import { degrees } from "../rotations";
 
 import {
   PDFRef,
   PDFStream,
   PDFAcroPushButton,
   PDFWidgetAnnotation,
-} from 'src/core';
-import { assertIs, assertOrUndefined, assertPositive } from 'src/utils';
+} from "../../core";
+import { assertIs, assertOrUndefined, assertPositive } from "../../utils";
 
 /**
  * Represents a button field of a [[PDFForm]].
@@ -60,8 +60,8 @@ export default class PDFButton extends PDFField {
   ) {
     super(acroPushButton, ref, doc);
 
-    assertIs(acroPushButton, 'acroButton', [
-      [PDFAcroPushButton, 'PDFAcroPushButton'],
+    assertIs(acroPushButton, "acroButton", [
+      [PDFAcroPushButton, "PDFAcroPushButton"],
     ]);
 
     this.acroField = acroPushButton;
@@ -114,7 +114,7 @@ export default class PDFButton extends PDFField {
    * @param fontSize The font size to be used when rendering text in this field.
    */
   setFontSize(fontSize: number) {
-    assertPositive(fontSize, 'fontSize');
+    assertPositive(fontSize, "fontSize");
     this.acroField.setFontSize(fontSize);
     this.markAsDirty();
   }
@@ -152,8 +152,8 @@ export default class PDFButton extends PDFField {
     page: PDFPage,
     options?: FieldAppearanceOptions,
   ) {
-    assertOrUndefined(text, 'text', ['string']);
-    assertOrUndefined(page, 'page', [[PDFPage, 'PDFPage']]);
+    assertOrUndefined(text, "text", ["string"]);
+    assertOrUndefined(page, "page", [[PDFPage, "PDFPage"]]);
     assertFieldAppearanceOptions(options);
 
     // Create a widget for this button
@@ -218,7 +218,7 @@ export default class PDFButton extends PDFField {
    * @param font The font to be used for creating the appearance streams.
    */
   defaultUpdateAppearances(font: PDFFont) {
-    assertIs(font, 'font', [[PDFFont, 'PDFFont']]);
+    assertIs(font, "font", [[PDFFont, "PDFFont"]]);
     this.updateAppearances(font);
   }
 
@@ -245,8 +245,8 @@ export default class PDFButton extends PDFField {
     font: PDFFont,
     provider?: AppearanceProviderFor<PDFButton>,
   ) {
-    assertIs(font, 'font', [[PDFFont, 'PDFFont']]);
-    assertOrUndefined(provider, 'provider', [Function]);
+    assertIs(font, "font", [[PDFFont, "PDFFont"]]);
+    assertOrUndefined(provider, "provider", [Function]);
 
     const widgets = this.acroField.getWidgets();
     for (let idx = 0, len = widgets.length; idx < len; idx++) {

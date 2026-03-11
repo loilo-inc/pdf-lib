@@ -15,10 +15,9 @@
     "apps:web": "http-server -c-1 .",
     "apps:web:mac": "bash -c 'sleep 1 && open http://localhost:8080/apps/web/test1.html' & npm run apps:web"
   },
-  "type": "module",
-  "types": "dist/index.d.ts",
+  "types": "dust/index.d.ts",
   "files": [
-    "dist/",
+    "dust/",
     "src/",
     "LICENSE",
     "package.json",
@@ -33,6 +32,7 @@
   },
   "devDependencies": {
     "@pdf-lib/fontkit": "^1.1.0",
+    "@types/node": "^25.4.0",
     "@types/pako": "^1.0.1",
     "prettier": "^3.8.1",
     "typescript": "^5.9.3",

@@ -1,11 +1,11 @@
-import { AsyncCache } from "../../utils/async-cache";
-import { deflateAsync } from "../../utils/deflate";
+import { Cache } from "../../utils";
+import { MethodNotImplementedError } from "../errors";
 import PDFDict from "../objects/PDFDict";
 import PDFName from "../objects/PDFName";
 import PDFStream from "../objects/PDFStream";
 
-abstract class PDFFlateStream extends PDFStream {
-  protected readonly contentsCache: AsyncCache<Uint8Array>;
+class PDFFlateStream extends PDFStream {
+  protected readonly contentsCache: Cache<Uint8Array>;
   protected readonly encode: boolean;
 
   constructor(dict: PDFDict, encode: boolean) {
@@ -14,24 +14,28 @@ abstract class PDFFlateStream extends PDFStream {
     this.encode = encode;
 
     if (encode) dict.set(PDFName.of("Filter"), PDFName.of("FlateDecode"));
-    this.contentsCache = AsyncCache.populatedBy(this.computeContents);
+    this.contentsCache = Cache.populatedBy(this.computeContents);
   }
 
-  private computeContents = async (): Promise<Uint8Array> => {
-    const unencodedContents = await this.getUnencodedContents();
-    return this.encode ? deflateAsync(unencodedContents) : unencodedContents;
+  computeContents = (): Uint8Array => {
+    const unencodedContents = this.getUnencodedContents();
+    return this.encode ? pako.deflate(unencodedContents) : unencodedContents;
   };
 
-  getContents(): Promise<Uint8Array> {
+  getContents(): Uint8Array {
     return this.contentsCache.access();
   }
 
-  async getContentsSize(): Promise<number> {
-    const contents = await this.getContents();
-    return contents.length;
+  getContentsSize(): number {
+    return this.contentsCache.access().length;
   }
 
-  abstract getUnencodedContents(): Promise<Uint8Array>;
+  getUnencodedContents(): Uint8Array {
+    throw new MethodNotImplementedError(
+      this.constructor.name,
+      "getUnencodedContents",
+    );
+  }
 }
 
 export default PDFFlateStream;

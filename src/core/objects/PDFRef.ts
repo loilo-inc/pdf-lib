@@ -1,6 +1,6 @@
-import { copyStringIntoBuffer } from "../../utils";
 import { PrivateConstructorError } from "../errors";
 import PDFObject from "./PDFObject";
+import { copyStringIntoBuffer } from "../../utils";
 
 const ENFORCER = {};
 const pool = new Map<string, PDFRef>();
@@ -38,15 +38,15 @@ class PDFRef extends PDFObject {
     return this;
   }
 
-  async toString(): Promise<string> {
+  toString(): string {
     return this.tag;
   }
 
-  async sizeInBytes(): Promise<number> {
+  sizeInBytes(): number {
     return this.tag.length;
   }
 
-  async copyBytesInto(buffer: Uint8Array, offset: number): Promise<number> {
+  copyBytesInto(buffer: Uint8Array, offset: number): number {
     offset += copyStringIntoBuffer(this.tag, buffer, offset);
     return this.tag.length;
   }

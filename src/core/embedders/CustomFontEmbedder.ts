@@ -1,17 +1,17 @@
 import { Font, Fontkit, Glyph, TypeFeatures } from "../../types/fontkit";
 
+import { createCmap } from "./CMap";
+import { deriveFontFlags } from "./FontFlags";
+import PDFHexString from "../objects/PDFHexString";
+import PDFRef from "../objects/PDFRef";
+import PDFString from "../objects/PDFString";
+import PDFContext from "../PDFContext";
 import {
   byAscendingId,
   Cache,
   sortedUniq,
   toHexStringOfMinLength,
 } from "../../utils";
-import PDFHexString from "../objects/PDFHexString";
-import PDFRef from "../objects/PDFRef";
-import PDFString from "../objects/PDFString";
-import PDFContext from "../PDFContext";
-import { createCmap } from "./CMap";
-import { deriveFontFlags } from "./FontFlags";
 
 /**
  * A note of thanks to the developers of https://github.com/foliojs/pdfkit, as
@@ -115,7 +115,7 @@ class CustomFontEmbedder {
     ref?: PDFRef,
   ): Promise<PDFRef> {
     const cidFontDictRef = await this.embedCIDFontDict(context);
-    const unicodeCMapRef = await this.embedUnicodeCmap(context);
+    const unicodeCMapRef = this.embedUnicodeCmap(context);
 
     const fontDict = context.obj({
       Type: "Font",
@@ -191,15 +191,15 @@ class CustomFontEmbedder {
   }
 
   protected async embedFontStream(context: PDFContext): Promise<PDFRef> {
-    const fontStream = await context.flateStream(await this.serializeFont(), {
+    const fontStream = context.flateStream(await this.serializeFont(), {
       Subtype: this.isCFF() ? "CIDFontType0C" : undefined,
     });
     return context.register(fontStream);
   }
 
-  protected async embedUnicodeCmap(context: PDFContext): Promise<PDFRef> {
+  protected embedUnicodeCmap(context: PDFContext): PDFRef {
     const cmap = createCmap(this.glyphCache.access(), this.glyphId.bind(this));
-    const cmapStream = await context.flateStream(cmap);
+    const cmapStream = context.flateStream(cmap);
     return context.register(cmapStream);
   }
 

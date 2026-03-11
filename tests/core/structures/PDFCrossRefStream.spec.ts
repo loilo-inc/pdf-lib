@@ -62,8 +62,8 @@ describe(`PDFCrossRefStream`, () => {
     expect(stream2.sizeInBytes()).toBe(110);
   });
 
-  it(`can be serialized`, async () => {
-    const buffer = new Uint8Array((await stream1.sizeInBytes()) + 3).fill(
+  it(`can be serialized`, () => {
+    const buffer = new Uint8Array(stream1.sizeInBytes() + 3).fill(
       toCharCode(" "),
     );
 
@@ -75,7 +75,7 @@ describe(`PDFCrossRefStream`, () => {
       2,  5,   2, 179,
     ]);
 
-    expect(await stream1.copyBytesInto(buffer, 2)).toBe(95);
+    expect(stream1.copyBytesInto(buffer, 2)).toBe(95);
     expect(buffer).toEqual(
       mergeIntoTypedArray(
         "  <<\n/Type /XRef\n/Length 16\n/W [ 1 1 2 ]\n/Index [ 0 3 21 1 ]\n>>\n",
@@ -86,8 +86,8 @@ describe(`PDFCrossRefStream`, () => {
     );
   });
 
-  it(`can be serialized without object number 1`, async () => {
-    const buffer = new Uint8Array((await stream2.sizeInBytes()) + 3).fill(
+  it(`can be serialized without object number 1`, () => {
+    const buffer = new Uint8Array(stream2.sizeInBytes() + 3).fill(
       toCharCode(" "),
     );
 
@@ -100,7 +100,7 @@ describe(`PDFCrossRefStream`, () => {
       2,  0,  10,    0,    1,
     ]);
 
-    expect(await stream2.copyBytesInto(buffer, 2)).toBe(110);
+    expect(stream2.copyBytesInto(buffer, 2)).toBe(110);
     expect(buffer).toEqual(
       mergeIntoTypedArray(
         "  <<\n/Type /XRef\n/Length 25\n/W [ 1 2 2 ]\n/Index [ 0 1 2 2 9000 2 ]\n>>\n",
@@ -118,7 +118,7 @@ describe(`PDFCrossRefStream`, () => {
     stream.addUncompressedEntry(PDFRef.of(9000), 600);
     stream.addCompressedEntry(PDFRef.of(9001), PDFRef.of(10), 1);
 
-    const buffer = new Uint8Array((await stream.sizeInBytes()) + 3).fill(
+    const buffer = new Uint8Array(stream.sizeInBytes() + 3).fill(
       toCharCode(" "),
     );
 
@@ -132,7 +132,7 @@ describe(`PDFCrossRefStream`, () => {
     ]);
     const encodedEntries = await deflateAsync(expectedEntries);
 
-    expect(await stream.copyBytesInto(buffer, 2)).toBe(135);
+    expect(stream.copyBytesInto(buffer, 2)).toBe(135);
     expect(buffer).toEqual(
       mergeIntoTypedArray(
         "  <<\n/Type /XRef\n/Length 29\n/W [ 1 2 2 ]\n/Index [ 0 1 2 2 9000 2 ]\n/Filter /FlateDecode\n>>\n",

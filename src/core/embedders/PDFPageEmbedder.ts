@@ -1,5 +1,3 @@
-import { TransformationMatrix } from "../../types/matrix";
-import { mergeIntoTypedArray } from "../../utils";
 import {
   MissingPageContentsEmbeddingError,
   UnrecognizedStreamTypeError,
@@ -14,6 +12,8 @@ import { decodePDFRawStream } from "../streams/decode";
 import PDFContentStream from "../structures/PDFContentStream";
 import PDFPageLeaf from "../structures/PDFPageLeaf";
 import CharCodes from "../syntax/CharCodes";
+import { TransformationMatrix } from "../../types/matrix";
+import { mergeIntoTypedArray } from "../../utils";
 
 /**
  * Represents a page bounding box.
@@ -93,10 +93,10 @@ class PDFPageEmbedder {
     const { Contents, Resources } = this.page.normalizedEntries();
 
     if (!Contents) throw new MissingPageContentsEmbeddingError();
-    const decodedContents = await this.decodeContents(Contents);
+    const decodedContents = this.decodeContents(Contents);
 
     const { left, bottom, right, top } = this.boundingBox;
-    const xObject = await context.flateStream(decodedContents, {
+    const xObject = context.flateStream(decodedContents, {
       Type: "XObject",
       Subtype: "Form",
       FormType: 1,
@@ -115,7 +115,7 @@ class PDFPageEmbedder {
 
   // `contents` is an array of streams which are merged to include them in the XObject.
   // This methods extracts each stream and joins them with a newline character.
-  private async decodeContents(contents: PDFArray) {
+  private decodeContents(contents: PDFArray) {
     const newline = Uint8Array.of(CharCodes.Newline);
     const decodedContents: Uint8Array[] = [];
 
@@ -126,7 +126,7 @@ class PDFPageEmbedder {
       if (stream instanceof PDFRawStream) {
         content = decodePDFRawStream(stream).decode();
       } else if (stream instanceof PDFContentStream) {
-        content = await stream.getUnencodedContents();
+        content = stream.getUnencodedContents();
       } else {
         throw new UnrecognizedStreamTypeError(stream);
       }

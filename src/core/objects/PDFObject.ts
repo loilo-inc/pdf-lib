@@ -1,16 +1,22 @@
 import { MethodNotImplementedError } from "../errors";
 import PDFContext from "../PDFContext";
 
-abstract class PDFObject {
+class PDFObject {
   clone(_context?: PDFContext): PDFObject {
     throw new MethodNotImplementedError(this.constructor.name, "clone");
   }
 
-  abstract toString(): Promise<string>;
+  toString(): string {
+    throw new MethodNotImplementedError(this.constructor.name, "toString");
+  }
 
-  abstract sizeInBytes(): Promise<number>;
+  sizeInBytes(): number {
+    throw new MethodNotImplementedError(this.constructor.name, "sizeInBytes");
+  }
 
-  abstract copyBytesInto(_buffer: Uint8Array, _offset: number): Promise<number>;
+  copyBytesInto(_buffer: Uint8Array, _offset: number): number {
+    throw new MethodNotImplementedError(this.constructor.name, "copyBytesInto");
+  }
 }
 
 export default PDFObject;

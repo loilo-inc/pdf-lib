@@ -1,4 +1,3 @@
-import { copyStringIntoBuffer, waitForTick } from "../../utils";
 import PDFCrossRefSection from "../document/PDFCrossRefSection";
 import PDFHeader from "../document/PDFHeader";
 import PDFTrailer from "../document/PDFTrailer";
@@ -9,6 +8,7 @@ import PDFRef from "../objects/PDFRef";
 import PDFContext from "../PDFContext";
 import PDFObjectStream from "../structures/PDFObjectStream";
 import CharCodes from "../syntax/CharCodes";
+import { copyStringIntoBuffer, waitForTick } from "../../utils";
 
 export interface SerializationInfo {
   size: number;
@@ -60,7 +60,7 @@ class PDFWriter {
       buffer[offset++] = CharCodes.j;
       buffer[offset++] = CharCodes.Newline;
 
-      offset += await object.copyBytesInto(buffer, offset);
+      offset += object.copyBytesInto(buffer, offset);
 
       buffer[offset++] = CharCodes.Newline;
       buffer[offset++] = CharCodes.e;
@@ -83,22 +83,22 @@ class PDFWriter {
     }
 
     if (trailerDict) {
-      offset += await trailerDict.copyBytesInto(buffer, offset);
+      offset += trailerDict.copyBytesInto(buffer, offset);
       buffer[offset++] = CharCodes.Newline;
       buffer[offset++] = CharCodes.Newline;
     }
 
-    offset += await trailer.copyBytesInto(buffer, offset);
+    offset += trailer.copyBytesInto(buffer, offset);
 
     return buffer;
   }
 
-  protected async computeIndirectObjectSize([ref, object]: [
+  protected computeIndirectObjectSize([ref, object]: [
     PDFRef,
     PDFObject,
-  ]): Promise<number> {
-    const refSize = (await ref.sizeInBytes()) + 3; // 'R' -> 'obj\n'
-    const objectSize = (await object.sizeInBytes()) + 9; // '\nendobj\n\n'
+  ]): number {
+    const refSize = ref.sizeInBytes() + 3; // 'R' -> 'obj\n'
+    const objectSize = object.sizeInBytes() + 9; // '\nendobj\n\n'
     return refSize + objectSize;
   }
 
@@ -125,7 +125,7 @@ class PDFWriter {
       const indirectObject = indirectObjects[idx];
       const [ref] = indirectObject;
       xref.addEntry(ref, size);
-      size += await this.computeIndirectObjectSize(indirectObject);
+      size += this.computeIndirectObjectSize(indirectObject);
       if (this.shouldWaitForTick(1)) await waitForTick();
     }
 
@@ -133,7 +133,7 @@ class PDFWriter {
     size += xref.sizeInBytes() + 1; // '\n'
 
     const trailerDict = PDFTrailerDict.of(this.createTrailerDict());
-    size += (await trailerDict.sizeInBytes()) + 2; // '\n\n'
+    size += trailerDict.sizeInBytes() + 2; // '\n\n'
 
     const trailer = PDFTrailer.forLastCrossRefSectionOffset(xrefOffset);
     size += trailer.sizeInBytes();

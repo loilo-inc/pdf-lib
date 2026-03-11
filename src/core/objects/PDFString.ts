@@ -1,15 +1,15 @@
+import PDFObject from "./PDFObject";
+import CharCodes from "../syntax/CharCodes";
 import {
   copyStringIntoBuffer,
-  hasUtf16BOM,
   padStart,
-  parseDate,
+  utf16Decode,
   pdfDocEncodingDecode,
   toCharCode,
-  utf16Decode,
+  parseDate,
+  hasUtf16BOM,
 } from "../../utils";
 import { InvalidPDFDateStringError } from "../errors";
-import CharCodes from "../syntax/CharCodes";
-import PDFObject from "./PDFObject";
 
 class PDFString extends PDFObject {
   // The PDF spec allows newlines and parens to appear directly within a literal
@@ -99,15 +99,15 @@ class PDFString extends PDFObject {
     return PDFString.of(this.value);
   }
 
-  async toString(): Promise<string> {
+  toString(): string {
     return `(${this.value})`;
   }
 
-  async sizeInBytes(): Promise<number> {
+  sizeInBytes(): number {
     return this.value.length + 2;
   }
 
-  async copyBytesInto(buffer: Uint8Array, offset: number): Promise<number> {
+  copyBytesInto(buffer: Uint8Array, offset: number): number {
     buffer[offset++] = CharCodes.LeftParen;
     offset += copyStringIntoBuffer(this.value, buffer, offset);
     buffer[offset++] = CharCodes.RightParen;

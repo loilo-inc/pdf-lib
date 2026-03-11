@@ -1,16 +1,15 @@
 import {
-  afterAll,
+  describe,
+  it,
+  expect,
   beforeAll,
   beforeEach,
-  describe,
-  expect,
-  it,
+  afterAll,
   vi,
 } from "vitest";
 import PDFPageLeaf from "../../../src/core/structures/PDFPageLeaf";
 import {
   mergeIntoTypedArray,
-  numberToString,
   PDFArray,
   PDFBool,
   PDFCatalog,
@@ -26,6 +25,7 @@ import {
   PDFRef,
   PDFString,
   typedArrayFor,
+  numberToString,
 } from "../../../src/index";
 
 type ParseOptions = { capNumbers?: boolean };
@@ -586,12 +586,12 @@ describe(`PDFObjectParser`, () => {
         "<<\n/Length 8\n>>\nstream\n\rthingz\n\nendstream",
       ],
     ].forEach(([input, output]) => {
-      it(`can parse ${JSON.stringify(input)}`, async () => {
+      it(`can parse ${JSON.stringify(input)}`, () => {
         const object = parse(typedArrayFor(input));
         expect(object).toBeInstanceOf(PDFRawStream);
 
-        const buffer = new Uint8Array(await object.sizeInBytes());
-        await object.copyBytesInto(buffer, 0);
+        const buffer = new Uint8Array(object.sizeInBytes());
+        object.copyBytesInto(buffer, 0);
         expect(buffer).toEqual(typedArrayFor(output));
       });
     });
@@ -636,7 +636,7 @@ describe(`PDFObjectParser`, () => {
       ).toBe("<<\n/Length 18\n>>\nstream\n Stuff and Things \nendstream");
     });
 
-    it(`handles binary stream content`, async () => {
+    it(`handles binary stream content`, () => {
       const input = mergeIntoTypedArray(
         "<<>>stream",
         new Uint8Array([12, 492, 0, 129]),
@@ -651,8 +651,8 @@ describe(`PDFObjectParser`, () => {
       const object = parse(typedArrayFor(input));
       expect(object).toBeInstanceOf(PDFRawStream);
 
-      const buffer = new Uint8Array(await object.sizeInBytes());
-      await object.copyBytesInto(buffer, 0);
+      const buffer = new Uint8Array(object.sizeInBytes());
+      object.copyBytesInto(buffer, 0);
       expect(buffer).toEqual(typedArrayFor(output));
     });
   });

@@ -1,13 +1,13 @@
-import { copyStringIntoBuffer } from "../../utils";
 import PDFArray from "../objects/PDFArray";
 import PDFHexString from "../objects/PDFHexString";
 import PDFName from "../objects/PDFName";
 import PDFNumber from "../objects/PDFNumber";
 import PDFObject from "../objects/PDFObject";
 import PDFString from "../objects/PDFString";
+import PDFOperatorNames from "./PDFOperatorNames";
 import PDFContext from "../PDFContext";
 import CharCodes from "../syntax/CharCodes";
-import PDFOperatorNames from "./PDFOperatorNames";
+import { copyStringIntoBuffer } from "../../utils";
 
 export type PDFOperatorArg =
   | string
@@ -38,7 +38,7 @@ class PDFOperator {
     return PDFOperator.of(this.name, args);
   }
 
-  async toString(): Promise<string> {
+  toString(): string {
     let value = "";
     for (let idx = 0, len = this.args.length; idx < len; idx++) {
       value += String(this.args[idx]) + " ";
@@ -47,24 +47,23 @@ class PDFOperator {
     return value;
   }
 
-  async sizeInBytes(): Promise<number> {
+  sizeInBytes(): number {
     let size = 0;
     for (let idx = 0, len = this.args.length; idx < len; idx++) {
       const arg = this.args[idx];
-      size +=
-        (arg instanceof PDFObject ? await arg.sizeInBytes() : arg.length) + 1;
+      size += (arg instanceof PDFObject ? arg.sizeInBytes() : arg.length) + 1;
     }
     size += this.name.length;
     return size;
   }
 
-  async copyBytesInto(buffer: Uint8Array, offset: number): Promise<number> {
+  copyBytesInto(buffer: Uint8Array, offset: number): number {
     const initialOffset = offset;
 
     for (let idx = 0, len = this.args.length; idx < len; idx++) {
       const arg = this.args[idx];
       if (arg instanceof PDFObject) {
-        offset += await arg.copyBytesInto(buffer, offset);
+        offset += arg.copyBytesInto(buffer, offset);
       } else {
         offset += copyStringIntoBuffer(arg, buffer, offset);
       }

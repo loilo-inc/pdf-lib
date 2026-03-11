@@ -1,6 +1,3 @@
-import { PDFArrayIsNotRectangleError } from "../errors";
-import PDFContext from "../PDFContext";
-import CharCodes from "../syntax/CharCodes";
 import PDFBool from "./PDFBool";
 import PDFDict from "./PDFDict";
 import PDFHexString from "./PDFHexString";
@@ -8,10 +5,13 @@ import PDFName from "./PDFName";
 import PDFNull from "./PDFNull";
 import PDFNumber from "./PDFNumber";
 import PDFObject from "./PDFObject";
-import PDFRawStream from "./PDFRawStream";
 import PDFRef from "./PDFRef";
 import PDFStream from "./PDFStream";
 import PDFString from "./PDFString";
+import PDFContext from "../PDFContext";
+import CharCodes from "../syntax/CharCodes";
+import { PDFArrayIsNotRectangleError } from "../errors";
+import PDFRawStream from "./PDFRawStream";
 
 class PDFArray extends PDFObject {
   static withContext = (context: PDFContext) => new PDFArray(context);
@@ -139,31 +139,31 @@ class PDFArray extends PDFObject {
     return clone;
   }
 
-  async toString(): Promise<string> {
+  toString(): string {
     let arrayString = "[ ";
     for (let idx = 0, len = this.size(); idx < len; idx++) {
-      arrayString += await this.get(idx).toString();
+      arrayString += this.get(idx).toString();
       arrayString += " ";
     }
     arrayString += "]";
     return arrayString;
   }
 
-  async sizeInBytes(): Promise<number> {
+  sizeInBytes(): number {
     let size = 3;
     for (let idx = 0, len = this.size(); idx < len; idx++) {
-      size += (await this.get(idx).sizeInBytes()) + 1;
+      size += this.get(idx).sizeInBytes() + 1;
     }
     return size;
   }
 
-  async copyBytesInto(buffer: Uint8Array, offset: number): Promise<number> {
+  copyBytesInto(buffer: Uint8Array, offset: number): number {
     const initialOffset = offset;
 
     buffer[offset++] = CharCodes.LeftSquareBracket;
     buffer[offset++] = CharCodes.Space;
     for (let idx = 0, len = this.size(); idx < len; idx++) {
-      offset += await this.get(idx).copyBytesInto(buffer, offset);
+      offset += this.get(idx).copyBytesInto(buffer, offset);
       buffer[offset++] = CharCodes.Space;
     }
     buffer[offset++] = CharCodes.RightSquareBracket;

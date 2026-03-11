@@ -1,3 +1,4 @@
+import { last, waitForTick } from "../../utils";
 import PDFHeader from "../document/PDFHeader";
 import PDFTrailer from "../document/PDFTrailer";
 import PDFInvalidObject from "../objects/PDFInvalidObject";
@@ -10,7 +11,6 @@ import PDFContext from "../PDFContext";
 import PDFCrossRefStream from "../structures/PDFCrossRefStream";
 import PDFObjectStream from "../structures/PDFObjectStream";
 import PDFWriter from "./PDFWriter";
-import { last, waitForTick } from "../../utils";
 
 class PDFStreamWriter extends PDFWriter {
   static forContext = (
@@ -71,7 +71,7 @@ class PDFStreamWriter extends PDFWriter {
       if (shouldNotCompress) {
         uncompressedObjects.push(indirectObject);
         xrefStream.addUncompressedEntry(ref, size);
-        size += this.computeIndirectObjectSize(indirectObject);
+        size += await this.computeIndirectObjectSize(indirectObject);
         if (this.shouldWaitForTick(1)) await waitForTick();
       } else {
         let chunk = last(compressedObjects);
@@ -98,7 +98,7 @@ class PDFStreamWriter extends PDFWriter {
       );
 
       xrefStream.addUncompressedEntry(ref, size);
-      size += this.computeIndirectObjectSize([ref, objectStream]);
+      size += await this.computeIndirectObjectSize([ref, objectStream]);
 
       uncompressedObjects.push([ref, objectStream]);
 
@@ -109,7 +109,7 @@ class PDFStreamWriter extends PDFWriter {
     xrefStream.dict.set(PDFName.of("Size"), PDFNumber.of(objectNumber));
     xrefStream.addUncompressedEntry(xrefStreamRef, size);
     const xrefOffset = size;
-    size += this.computeIndirectObjectSize([xrefStreamRef, xrefStream]);
+    size += await this.computeIndirectObjectSize([xrefStreamRef, xrefStream]);
 
     uncompressedObjects.push([xrefStreamRef, xrefStream]);
 

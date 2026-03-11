@@ -1,6 +1,6 @@
 import { PrivateConstructorError } from "../errors";
-import PDFObject from "./PDFObject";
 import CharCodes from "../syntax/CharCodes";
+import PDFObject from "./PDFObject";
 
 const ENFORCER = {};
 
@@ -24,15 +24,15 @@ class PDFBool extends PDFObject {
     return this;
   }
 
-  toString(): string {
+  async toString(): Promise<string> {
     return String(this.value);
   }
 
-  sizeInBytes(): number {
+  async sizeInBytes(): Promise<number> {
     return this.value ? 4 : 5;
   }
 
-  copyBytesInto(buffer: Uint8Array, offset: number): number {
+  async copyBytesInto(buffer: Uint8Array, offset: number): Promise<number> {
     if (this.value) {
       buffer[offset++] = CharCodes.t;
       buffer[offset++] = CharCodes.r;

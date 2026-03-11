@@ -1,15 +1,15 @@
-import PDFObject from "./PDFObject";
-import CharCodes from "../syntax/CharCodes";
 import {
   copyStringIntoBuffer,
+  hasUtf16BOM,
+  parseDate,
+  pdfDocEncodingDecode,
   toHexStringOfMinLength,
   utf16Decode,
   utf16Encode,
-  pdfDocEncodingDecode,
-  parseDate,
-  hasUtf16BOM,
 } from "../../utils";
 import { InvalidPDFDateStringError } from "../errors";
+import CharCodes from "../syntax/CharCodes";
+import PDFObject from "./PDFObject";
 
 class PDFHexString extends PDFObject {
   static of = (value: string) => new PDFHexString(value);
@@ -75,15 +75,15 @@ class PDFHexString extends PDFObject {
     return PDFHexString.of(this.value);
   }
 
-  toString(): string {
+  async toString(): Promise<string> {
     return `<${this.value}>`;
   }
 
-  sizeInBytes(): number {
+  async sizeInBytes(): Promise<number> {
     return this.value.length + 2;
   }
 
-  copyBytesInto(buffer: Uint8Array, offset: number): number {
+  async copyBytesInto(buffer: Uint8Array, offset: number): Promise<number> {
     buffer[offset++] = CharCodes.LessThan;
     offset += copyStringIntoBuffer(this.value, buffer, offset);
     buffer[offset++] = CharCodes.GreaterThan;

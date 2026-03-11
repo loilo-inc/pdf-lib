@@ -1,11 +1,12 @@
+import { copyStringIntoBuffer, last } from "../../utils";
+import { AsyncCache } from "../../utils/async-cache";
 import PDFName from "../objects/PDFName";
 import PDFNumber from "../objects/PDFNumber";
 import PDFObject from "../objects/PDFObject";
 import PDFRef from "../objects/PDFRef";
 import PDFContext from "../PDFContext";
-import PDFFlateStream from "./PDFFlateStream";
 import CharCodes from "../syntax/CharCodes";
-import { copyStringIntoBuffer, last } from "../../utils";
+import PDFFlateStream from "./PDFFlateStream";
 
 export type IndirectObject = [PDFRef, PDFObject];
 
@@ -17,8 +18,8 @@ class PDFObjectStream extends PDFFlateStream {
   ) => new PDFObjectStream(context, objects, encode);
 
   private readonly objects: IndirectObject[];
-  private readonly offsets: [number, number][];
-  private readonly offsetsString: string;
+  private readonly offsets: AsyncCache<[number, number][]>;
+  private readonly offsetsString: AsyncCache<string>;
 
   private constructor(
     context: PDFContext,
@@ -28,12 +29,11 @@ class PDFObjectStream extends PDFFlateStream {
     super(context.obj({}), encode);
 
     this.objects = objects;
-    this.offsets = this.computeObjectOffsets();
-    this.offsetsString = this.computeOffsetsString();
+    this.offsets = AsyncCache.populatedBy(this.computeObjectOffsets);
+    this.offsetsString = AsyncCache.populatedBy(this.computeOffsetsString);
 
     this.dict.set(PDFName.of("Type"), PDFName.of("ObjStm"));
     this.dict.set(PDFName.of("N"), PDFNumber.of(this.objects.length));
-    this.dict.set(PDFName.of("First"), PDFNumber.of(this.offsetsString.length));
   }
 
   getObjectsCount(): number {
@@ -48,8 +48,14 @@ class PDFObjectStream extends PDFFlateStream {
     );
   }
 
-  getContentsString(): string {
-    let value = this.offsetsString;
+  async updateDict(): Promise<void> {
+    await super.updateDict();
+    const offsetsString = await this.offsetsString.access();
+    this.dict.set(PDFName.of("First"), PDFNumber.of(offsetsString.length));
+  }
+
+  async getContentsString(): Promise<string> {
+    let value = await this.offsetsString.access();
     for (let idx = 0, len = this.objects.length; idx < len; idx++) {
       const [, object] = this.objects[idx];
       value += `${object}\n`;
@@ -57,42 +63,45 @@ class PDFObjectStream extends PDFFlateStream {
     return value;
   }
 
-  getUnencodedContents(): Uint8Array {
-    const buffer = new Uint8Array(this.getUnencodedContentsSize());
-    let offset = copyStringIntoBuffer(this.offsetsString, buffer, 0);
+  async getUnencodedContents(): Promise<Uint8Array> {
+    const buffer = new Uint8Array(await this.getUnencodedContentsSize());
+    let offset = copyStringIntoBuffer(
+      await this.offsetsString.access(),
+      buffer,
+      0,
+    );
     for (let idx = 0, len = this.objects.length; idx < len; idx++) {
       const [, object] = this.objects[idx];
-      offset += object.copyBytesInto(buffer, offset);
+      offset += await object.copyBytesInto(buffer, offset);
       buffer[offset++] = CharCodes.Newline;
     }
     return buffer;
   }
 
-  getUnencodedContentsSize(): number {
-    return (
-      this.offsetsString.length +
-      last(this.offsets)[1] +
-      last(this.objects)[1].sizeInBytes() +
-      1
-    );
+  async getUnencodedContentsSize(): Promise<number> {
+    const offsets = await this.offsets.access();
+    const objects = await last(this.objects)[1].sizeInBytes();
+    const offsetsString = await this.offsetsString.access();
+    return offsetsString.length + last(offsets)[1] + objects + 1;
   }
 
-  private computeOffsetsString(): string {
+  private async computeOffsetsString(): Promise<string> {
     let offsetsString = "";
-    for (let idx = 0, len = this.offsets.length; idx < len; idx++) {
-      const [objectNumber, offset] = this.offsets[idx];
+    const offsets = await this.offsets.access();
+    for (let idx = 0, len = offsets.length; idx < len; idx++) {
+      const [objectNumber, offset] = offsets[idx];
       offsetsString += `${objectNumber} ${offset} `;
     }
     return offsetsString;
   }
 
-  private computeObjectOffsets(): [number, number][] {
+  private async computeObjectOffsets(): Promise<[number, number][]> {
     let offset = 0;
     const offsets = new Array(this.objects.length);
     for (let idx = 0, len = this.objects.length; idx < len; idx++) {
       const [ref, object] = this.objects[idx];
       offsets[idx] = [ref.objectNumber, offset];
-      offset += object.sizeInBytes() + 1; // '\n'
+      offset += (await object.sizeInBytes()) + 1; // '\n'
     }
     return offsets;
   }

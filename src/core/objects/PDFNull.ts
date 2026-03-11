@@ -1,5 +1,5 @@
-import PDFObject from "./PDFObject";
 import CharCodes from "../syntax/CharCodes";
+import PDFObject from "./PDFObject";
 
 class PDFNull extends PDFObject {
   asNull(): null {
@@ -10,15 +10,15 @@ class PDFNull extends PDFObject {
     return this;
   }
 
-  toString(): string {
+  async toString(): Promise<string> {
     return "null";
   }
 
-  sizeInBytes(): number {
+  async sizeInBytes(): Promise<number> {
     return 4;
   }
 
-  copyBytesInto(buffer: Uint8Array, offset: number): number {
+  async copyBytesInto(buffer: Uint8Array, offset: number): Promise<number> {
     buffer[offset++] = CharCodes.n;
     buffer[offset++] = CharCodes.u;
     buffer[offset++] = CharCodes.l;

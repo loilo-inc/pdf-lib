@@ -10,15 +10,15 @@ class PDFTrailerDict {
     this.dict = dict;
   }
 
-  toString(): string {
-    return `trailer\n${this.dict.toString()}`;
+  async toString(): Promise<string> {
+    return `trailer\n${await this.dict.toString()}`;
   }
 
-  sizeInBytes(): number {
-    return 8 + this.dict.sizeInBytes();
+  async sizeInBytes(): Promise<number> {
+    return 8 + (await this.dict.sizeInBytes());
   }
 
-  copyBytesInto(buffer: Uint8Array, offset: number): number {
+  async copyBytesInto(buffer: Uint8Array, offset: number): Promise<number> {
     const initialOffset = offset;
 
     buffer[offset++] = CharCodes.t;
@@ -30,7 +30,7 @@ class PDFTrailerDict {
     buffer[offset++] = CharCodes.r;
     buffer[offset++] = CharCodes.Newline;
 
-    offset += this.dict.copyBytesInto(buffer, offset);
+    offset += await this.dict.copyBytesInto(buffer, offset);
 
     return offset - initialOffset;
   }

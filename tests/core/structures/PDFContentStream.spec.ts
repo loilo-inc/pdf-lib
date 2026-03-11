@@ -71,12 +71,12 @@ describe(`PDFContentStream`, () => {
     expect(PDFContentStream.of(dict, operators, false).sizeInBytes()).toBe(89);
   });
 
-  it(`can be serialized`, () => {
+  it(`can be serialized`, async () => {
     const stream = PDFContentStream.of(dict, operators, false);
-    const buffer = new Uint8Array(stream.sizeInBytes() + 3).fill(
+    const buffer = new Uint8Array((await stream.sizeInBytes()) + 3).fill(
       toCharCode(" "),
     );
-    expect(stream.copyBytesInto(buffer, 2)).toBe(89);
+    expect(await stream.copyBytesInto(buffer, 2)).toBe(89);
     expect(buffer).toEqual(
       typedArrayFor(
         "  <<\n/Length 55\n>>\n" +
@@ -101,10 +101,10 @@ describe(`PDFContentStream`, () => {
     const encodedContents = await deflateAsync(contents);
 
     const stream = PDFContentStream.of(dict, operators, true);
-    const buffer = new Uint8Array(stream.sizeInBytes() + 3).fill(
+    const buffer = new Uint8Array((await stream.sizeInBytes()) + 3).fill(
       toCharCode(" "),
     );
-    expect(stream.copyBytesInto(buffer, 2)).toBe(115);
+    expect(await stream.copyBytesInto(buffer, 2)).toBe(115);
     expect(buffer).toEqual(
       mergeIntoTypedArray(
         "  <<\n/Length 60\n/Filter /FlateDecode\n>>\n",

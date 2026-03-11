@@ -1,3 +1,5 @@
+import PDFContext from "../PDFContext";
+import CharCodes from "../syntax/CharCodes";
 import PDFArray from "./PDFArray";
 import PDFBool from "./PDFBool";
 import PDFHexString from "./PDFHexString";
@@ -8,8 +10,6 @@ import PDFObject from "./PDFObject";
 import PDFRef from "./PDFRef";
 import PDFStream from "./PDFStream";
 import PDFString from "./PDFString";
-import PDFContext from "../PDFContext";
-import CharCodes from "../syntax/CharCodes";
 
 export type DictMap = Map<PDFName, PDFObject>;
 
@@ -179,28 +179,30 @@ class PDFDict extends PDFObject {
     return clone;
   }
 
-  toString(): string {
+  async toString(): Promise<string> {
     let dictString = "<<\n";
     const entries = this.entries();
     for (let idx = 0, len = entries.length; idx < len; idx++) {
       const [key, value] = entries[idx];
-      dictString += key.toString() + " " + value.toString() + "\n";
+      const keyString = await key.toString();
+      const valueString = await value.toString();
+      dictString += keyString + " " + valueString + "\n";
     }
     dictString += ">>";
     return dictString;
   }
 
-  sizeInBytes(): number {
+  async sizeInBytes(): Promise<number> {
     let size = 5;
     const entries = this.entries();
     for (let idx = 0, len = entries.length; idx < len; idx++) {
       const [key, value] = entries[idx];
-      size += key.sizeInBytes() + value.sizeInBytes() + 2;
+      size += (await key.sizeInBytes()) + (await value.sizeInBytes()) + 2;
     }
     return size;
   }
 
-  copyBytesInto(buffer: Uint8Array, offset: number): number {
+  async copyBytesInto(buffer: Uint8Array, offset: number): Promise<number> {
     const initialOffset = offset;
 
     buffer[offset++] = CharCodes.LessThan;
@@ -210,9 +212,9 @@ class PDFDict extends PDFObject {
     const entries = this.entries();
     for (let idx = 0, len = entries.length; idx < len; idx++) {
       const [key, value] = entries[idx];
-      offset += key.copyBytesInto(buffer, offset);
+      offset += await key.copyBytesInto(buffer, offset);
       buffer[offset++] = CharCodes.Space;
-      offset += value.copyBytesInto(buffer, offset);
+      offset += await value.copyBytesInto(buffer, offset);
       buffer[offset++] = CharCodes.Newline;
     }
 

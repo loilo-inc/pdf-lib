@@ -1,7 +1,7 @@
-import PDFString from "../objects/PDFString";
 import PDFHexString from "../objects/PDFHexString";
-import PDFContext from "../PDFContext";
 import PDFRef from "../objects/PDFRef";
+import PDFString from "../objects/PDFString";
+import PDFContext from "../PDFContext";
 
 /**
  * From the PDF-A3 specification, section **3.1. Requirements - General**.
@@ -59,7 +59,7 @@ class FileEmbedder {
       afRelationship,
     } = this.options;
 
-    const embeddedFileStream = context.flateStream(this.fileData, {
+    const embeddedFileStream = await context.flateStream(this.fileData, {
       Type: "EmbeddedFile",
       Subtype: mimeType ?? undefined,
       Params: {

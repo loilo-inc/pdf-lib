@@ -1,8 +1,8 @@
 import PDFDict from "../objects/PDFDict";
 import PDFOperator from "../operators/PDFOperator";
 import PDFContext from "../PDFContext";
-import PDFFlateStream from "./PDFFlateStream";
 import CharCodes from "../syntax/CharCodes";
+import PDFFlateStream from "./PDFFlateStream";
 
 class PDFContentStream extends PDFFlateStream {
   static of = (dict: PDFDict, operators: PDFOperator[], encode = true) =>
@@ -28,7 +28,7 @@ class PDFContentStream extends PDFFlateStream {
     return PDFContentStream.of(dict.clone(context), operators, encode);
   }
 
-  getContentsString(): string {
+  async getContentsString(): Promise<string> {
     let value = "";
     for (let idx = 0, len = this.operators.length; idx < len; idx++) {
       value += `${this.operators[idx]}\n`;
@@ -36,20 +36,20 @@ class PDFContentStream extends PDFFlateStream {
     return value;
   }
 
-  getUnencodedContents(): Uint8Array {
-    const buffer = new Uint8Array(this.getUnencodedContentsSize());
+  async getUnencodedContents(): Promise<Uint8Array> {
+    const buffer = new Uint8Array(await this.getUnencodedContentsSize());
     let offset = 0;
     for (let idx = 0, len = this.operators.length; idx < len; idx++) {
-      offset += this.operators[idx].copyBytesInto(buffer, offset);
+      offset += await this.operators[idx].copyBytesInto(buffer, offset);
       buffer[offset++] = CharCodes.Newline;
     }
     return buffer;
   }
 
-  getUnencodedContentsSize(): number {
+  async getUnencodedContentsSize(): Promise<number> {
     let size = 0;
     for (let idx = 0, len = this.operators.length; idx < len; idx++) {
-      size += this.operators[idx].sizeInBytes() + 1;
+      size += (await this.operators[idx].sizeInBytes()) + 1;
     }
     return size;
   }

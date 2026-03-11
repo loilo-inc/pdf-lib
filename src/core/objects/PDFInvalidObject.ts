@@ -14,15 +14,15 @@ class PDFInvalidObject extends PDFObject {
     return PDFInvalidObject.of(this.data.slice());
   }
 
-  toString(): string {
+  async toString(): Promise<string> {
     return `PDFInvalidObject(${this.data.length} bytes)`;
   }
 
-  sizeInBytes(): number {
+  async sizeInBytes(): Promise<number> {
     return this.data.length;
   }
 
-  copyBytesInto(buffer: Uint8Array, offset: number): number {
+  async copyBytesInto(buffer: Uint8Array, offset: number): Promise<number> {
     const length = this.data.length;
     for (let idx = 0; idx < length; idx++) {
       buffer[offset++] = this.data[idx];

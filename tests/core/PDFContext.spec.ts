@@ -80,8 +80,8 @@ describe(`PDFContext`, () => {
     const context = PDFContext.create();
 
     const stream = await context.flateStream("stuff and things!");
-    const buffer = new Uint8Array(stream.sizeInBytes());
-    stream.copyBytesInto(buffer, 0);
+    const buffer = new Uint8Array(await stream.sizeInBytes());
+    await stream.copyBytesInto(buffer, 0);
 
     expect(buffer).toEqual(
       mergeIntoTypedArray(

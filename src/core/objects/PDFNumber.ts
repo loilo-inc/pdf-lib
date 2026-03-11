@@ -27,15 +27,15 @@ class PDFNumber extends PDFObject {
     return PDFNumber.of(this.numberValue);
   }
 
-  toString(): string {
+  async toString(): Promise<string> {
     return this.stringValue;
   }
 
-  sizeInBytes(): number {
+  async sizeInBytes(): Promise<number> {
     return this.stringValue.length;
   }
 
-  copyBytesInto(buffer: Uint8Array, offset: number): number {
+  async copyBytesInto(buffer: Uint8Array, offset: number): Promise<number> {
     offset += copyStringIntoBuffer(this.stringValue, buffer, offset);
     return this.stringValue.length;
   }

@@ -1,13 +1,13 @@
-import { PrivateConstructorError } from "../errors";
-import PDFObject from "./PDFObject";
-import CharCodes from "../syntax/CharCodes";
-import { IsIrregular } from "../syntax/Irregular";
 import {
   charFromHexCode,
   copyStringIntoBuffer,
   toCharCode,
   toHexString,
 } from "../../utils";
+import { PrivateConstructorError } from "../errors";
+import CharCodes from "../syntax/CharCodes";
+import { IsIrregular } from "../syntax/Irregular";
+import PDFObject from "./PDFObject";
 
 const decodeName = (name: string) =>
   name.replace(/#([\dABCDEF]{2})/g, (_, hex) => charFromHexCode(hex));
@@ -142,15 +142,15 @@ class PDFName extends PDFObject {
     return this;
   }
 
-  toString(): string {
+  async toString(): Promise<string> {
     return this.encodedName;
   }
 
-  sizeInBytes(): number {
+  async sizeInBytes(): Promise<number> {
     return this.encodedName.length;
   }
 
-  copyBytesInto(buffer: Uint8Array, offset: number): number {
+  async copyBytesInto(buffer: Uint8Array, offset: number): Promise<number> {
     offset += copyStringIntoBuffer(this.encodedName, buffer, offset);
     return this.encodedName.length;
   }

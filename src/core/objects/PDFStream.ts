@@ -1,12 +1,12 @@
 import { MethodNotImplementedError } from "../errors";
+import PDFContext from "../PDFContext";
+import CharCodes from "../syntax/CharCodes";
 import PDFDict from "./PDFDict";
 import PDFName from "./PDFName";
 import PDFNumber from "./PDFNumber";
 import PDFObject from "./PDFObject";
-import PDFContext from "../PDFContext";
-import CharCodes from "../syntax/CharCodes";
 
-class PDFStream extends PDFObject {
+abstract class PDFStream extends PDFObject {
   readonly dict: PDFDict;
 
   constructor(dict: PDFDict) {
@@ -18,48 +18,38 @@ class PDFStream extends PDFObject {
     throw new MethodNotImplementedError(this.constructor.name, "clone");
   }
 
-  getContentsString(): string {
-    throw new MethodNotImplementedError(
-      this.constructor.name,
-      "getContentsString",
-    );
-  }
+  abstract getContentsString(): Promise<string>;
 
-  getContents(): Uint8Array {
-    throw new MethodNotImplementedError(this.constructor.name, "getContents");
-  }
+  abstract getContents(): Promise<Uint8Array>;
 
-  getContentsSize(): number {
-    throw new MethodNotImplementedError(
-      this.constructor.name,
-      "getContentsSize",
-    );
-  }
+  abstract getContentsSize(): Promise<number>;
 
-  updateDict(): void {
-    const contentsSize = this.getContentsSize();
+  async updateDict(): Promise<void> {
+    const contentsSize = await this.getContentsSize();
     this.dict.set(PDFName.Length, PDFNumber.of(contentsSize));
   }
 
-  sizeInBytes(): number {
-    this.updateDict();
-    return this.dict.sizeInBytes() + this.getContentsSize() + 18;
+  async sizeInBytes(): Promise<number> {
+    await this.updateDict();
+    const size = await this.dict.sizeInBytes();
+    const contentsSize = await this.getContentsSize();
+    return size + contentsSize + 18;
   }
 
-  toString(): string {
-    this.updateDict();
-    let streamString = this.dict.toString();
+  async toString(): Promise<string> {
+    await this.updateDict();
+    let streamString = await this.dict.toString();
     streamString += "\nstream\n";
-    streamString += this.getContentsString();
+    streamString += await this.getContentsString();
     streamString += "\nendstream";
     return streamString;
   }
 
-  copyBytesInto(buffer: Uint8Array, offset: number): number {
-    this.updateDict();
+  async copyBytesInto(buffer: Uint8Array, offset: number): Promise<number> {
+    await this.updateDict();
     const initialOffset = offset;
 
-    offset += this.dict.copyBytesInto(buffer, offset);
+    offset += await this.dict.copyBytesInto(buffer, offset);
     buffer[offset++] = CharCodes.Newline;
 
     buffer[offset++] = CharCodes.s;
@@ -70,7 +60,7 @@ class PDFStream extends PDFObject {
     buffer[offset++] = CharCodes.m;
     buffer[offset++] = CharCodes.Newline;
 
-    const contents = this.getContents();
+    const contents = await this.getContents();
     for (let idx = 0, len = contents.length; idx < len; idx++) {
       buffer[offset++] = contents[idx];
     }

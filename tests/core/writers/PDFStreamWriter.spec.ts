@@ -1,5 +1,5 @@
-import { describe, it, expect } from "vitest";
 import fs from "fs";
+import { describe, expect, it } from "vitest";
 
 import {
   PDFContext,
@@ -24,7 +24,7 @@ describe(`PDFStreamWriter`, () => {
   it(`serializes PDFContext objects using Indirect Objects, Object Streams, and XRef Streams`, async () => {
     const context = PDFContext.create();
 
-    const contentStream = context.flateStream(contentStreamText);
+    const contentStream = await context.flateStream(contentStreamText);
     const contentStreamRef = PDFRef.of(9000);
     context.assign(contentStreamRef, contentStream);
 

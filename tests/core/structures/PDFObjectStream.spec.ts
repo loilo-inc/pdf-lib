@@ -74,16 +74,16 @@ describe(`PDFObjectStream`, () => {
     ).toBe(172);
   });
 
-  it(`can be serialized`, () => {
+  it(`can be serialized`, async () => {
     const stream = PDFObjectStream.withContextAndObjects(
       context,
       objects,
       false,
     );
-    const buffer = new Uint8Array(stream.sizeInBytes() + 3).fill(
+    const buffer = new Uint8Array((await stream.sizeInBytes()) + 3).fill(
       toCharCode(" "),
     );
-    expect(stream.copyBytesInto(buffer, 2)).toBe(172);
+    expect(await stream.copyBytesInto(buffer, 2)).toBe(172);
     expect(buffer).toEqual(
       typedArrayFor(
         "  <<\n/Type /ObjStm\n/N 9\n/First 42\n/Length 108\n>>\n" +
@@ -122,10 +122,10 @@ describe(`PDFObjectStream`, () => {
       objects,
       true,
     );
-    const buffer = new Uint8Array(stream.sizeInBytes() + 3).fill(
+    const buffer = new Uint8Array((await stream.sizeInBytes()) + 3).fill(
       toCharCode(" "),
     );
-    expect(stream.copyBytesInto(buffer, 2)).toBe(195);
+    expect(await stream.copyBytesInto(buffer, 2)).toBe(195);
     expect(buffer).toEqual(
       mergeIntoTypedArray(
         "  <<\n/Filter /FlateDecode\n/Type /ObjStm\n/N 9\n/First 42\n/Length 110\n>>\n",

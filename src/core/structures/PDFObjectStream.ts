@@ -1,13 +1,14 @@
+import { copyStringIntoBuffer, last } from "../../utils";
+import { AsyncCache } from "../../utils/async-cache";
 import PDFName from "../objects/PDFName";
 import PDFNumber from "../objects/PDFNumber";
-import PDFObject from "../objects/PDFObject";
+import PDFObject, { PDFAsyncObject } from "../objects/PDFObject";
 import PDFRef from "../objects/PDFRef";
 import PDFContext from "../PDFContext";
-import PDFFlateStream from "./PDFFlateStream";
 import CharCodes from "../syntax/CharCodes";
-import { copyStringIntoBuffer, last } from "../../utils";
+import PDFFlateStream from "./PDFFlateStream";
 
-export type IndirectObject = [PDFRef, PDFObject];
+export type IndirectObject = [PDFRef, PDFObject | PDFAsyncObject];
 
 class PDFObjectStream extends PDFFlateStream {
   static withContextAndObjects = (
@@ -17,8 +18,8 @@ class PDFObjectStream extends PDFFlateStream {
   ) => new PDFObjectStream(context, objects, encode);
 
   private readonly objects: IndirectObject[];
-  private readonly offsets: [number, number][];
-  private readonly offsetsString: string;
+  private readonly offsets: AsyncCache<[number, number][]>;
+  private readonly offsetsString: AsyncCache<string>;
 
   private constructor(
     context: PDFContext,
@@ -28,16 +29,20 @@ class PDFObjectStream extends PDFFlateStream {
     super(context.obj({}), encode);
 
     this.objects = objects;
-    this.offsets = this.computeObjectOffsets();
-    this.offsetsString = this.computeOffsetsString();
-
-    this.dict.set(PDFName.of("Type"), PDFName.of("ObjStm"));
-    this.dict.set(PDFName.of("N"), PDFNumber.of(this.objects.length));
-    this.dict.set(PDFName.of("First"), PDFNumber.of(this.offsetsString.length));
+    this.offsets = new AsyncCache(this.computeObjectOffsets);
+    this.offsetsString = new AsyncCache(this.computeOffsetsString);
   }
 
   getObjectsCount(): number {
     return this.objects.length;
+  }
+
+  async updateDict(): Promise<void> {
+    await super.updateDict();
+    this.dict.set(PDFName.of("Type"), PDFName.of("ObjStm"));
+    this.dict.set(PDFName.of("N"), PDFNumber.of(this.objects.length));
+    const offsetsString = await this.offsetsString.access();
+    this.dict.set(PDFName.of("First"), PDFNumber.of(offsetsString.length));
   }
 
   clone(context?: PDFContext): PDFObjectStream {
@@ -48,8 +53,8 @@ class PDFObjectStream extends PDFFlateStream {
     );
   }
 
-  getContentsString(): string {
-    let value = this.offsetsString;
+  async getContentsString(): Promise<string> {
+    let value = await this.offsetsString.access();
     for (let idx = 0, len = this.objects.length; idx < len; idx++) {
       const [, object] = this.objects[idx];
       value += `${object}\n`;
@@ -57,45 +62,46 @@ class PDFObjectStream extends PDFFlateStream {
     return value;
   }
 
-  getUnencodedContents(): Uint8Array {
-    const buffer = new Uint8Array(this.getUnencodedContentsSize());
-    let offset = copyStringIntoBuffer(this.offsetsString, buffer, 0);
+  async getUnencodedContents(): Promise<Uint8Array> {
+    const contentsSize = await this.getUnencodedContentsSize();
+    const buffer = new Uint8Array(contentsSize);
+    const offsetsString = await this.offsetsString.access();
+    let offset = copyStringIntoBuffer(offsetsString, buffer, 0);
     for (let idx = 0, len = this.objects.length; idx < len; idx++) {
       const [, object] = this.objects[idx];
-      offset += object.copyBytesInto(buffer, offset);
+      offset += await object.copyBytesInto(buffer, offset);
       buffer[offset++] = CharCodes.Newline;
     }
     return buffer;
   }
 
-  getUnencodedContentsSize(): number {
-    return (
-      this.offsetsString.length +
-      last(this.offsets)[1] +
-      last(this.objects)[1].sizeInBytes() +
-      1
-    );
+  async getUnencodedContentsSize(): Promise<number> {
+    const offsetsString = await this.offsetsString.access();
+    const lastOffset = (await this.offsets.access()).slice(-1)[0][1];
+    const lastObjectSize = await last(this.objects)[1].sizeInBytes();
+    return offsetsString.length + lastOffset + lastObjectSize + 1;
   }
 
-  private computeOffsetsString(): string {
+  private computeOffsetsString = async (): Promise<string> => {
     let offsetsString = "";
-    for (let idx = 0, len = this.offsets.length; idx < len; idx++) {
-      const [objectNumber, offset] = this.offsets[idx];
+    const offsets = await this.offsets.access();
+    for (let idx = 0, len = offsets.length; idx < len; idx++) {
+      const [objectNumber, offset] = offsets[idx];
       offsetsString += `${objectNumber} ${offset} `;
     }
     return offsetsString;
-  }
+  };
 
-  private computeObjectOffsets(): [number, number][] {
+  private computeObjectOffsets = async (): Promise<[number, number][]> => {
     let offset = 0;
     const offsets = new Array(this.objects.length);
     for (let idx = 0, len = this.objects.length; idx < len; idx++) {
       const [ref, object] = this.objects[idx];
       offsets[idx] = [ref.objectNumber, offset];
-      offset += object.sizeInBytes() + 1; // '\n'
+      offset += (await object.sizeInBytes()) + 1; // '\n'
     }
     return offsets;
-  }
+  };
 }
 
 export default PDFObjectStream;

@@ -1,9 +1,9 @@
+import { bytesFor, Cache, reverseArray, sizeInBytes, sum } from "../../utils";
 import PDFDict from "../objects/PDFDict";
 import PDFName from "../objects/PDFName";
 import PDFRef from "../objects/PDFRef";
 import PDFContext from "../PDFContext";
 import PDFFlateStream from "./PDFFlateStream";
-import { bytesFor, Cache, reverseArray, sizeInBytes, sum } from "../../utils";
 
 export enum EntryType {
   Deleted = 0,
@@ -97,7 +97,7 @@ class PDFCrossRefStream extends PDFFlateStream {
     return PDFCrossRefStream.of(dict.clone(context), entries.slice(), encode);
   }
 
-  getContentsString(): string {
+  async getContentsString(): Promise<string> {
     const entryTuples = this.entryTuplesCache.access();
     const byteWidths = this.maxByteWidthsCache.access();
     let value = "";
@@ -127,7 +127,7 @@ class PDFCrossRefStream extends PDFFlateStream {
     return value;
   }
 
-  getUnencodedContents(): Uint8Array {
+  async getUnencodedContents(): Promise<Uint8Array> {
     const entryTuples = this.entryTuplesCache.access();
     const byteWidths = this.maxByteWidthsCache.access();
     const buffer = new Uint8Array(this.getUnencodedContentsSize());
@@ -158,14 +158,14 @@ class PDFCrossRefStream extends PDFFlateStream {
     return buffer;
   }
 
-  getUnencodedContentsSize(): number {
+  private getUnencodedContentsSize(): number {
     const byteWidths = this.maxByteWidthsCache.access();
     const entryWidth = sum(byteWidths);
     return entryWidth * this.entries.length;
   }
 
-  updateDict(): void {
-    super.updateDict();
+  async updateDict(): Promise<void> {
+    await super.updateDict();
 
     const byteWidths = this.maxByteWidthsCache.access();
     const index = this.indexCache.access();

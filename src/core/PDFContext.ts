@@ -10,7 +10,7 @@ import PDFHexString from "./objects/PDFHexString";
 import PDFName from "./objects/PDFName";
 import PDFNull from "./objects/PDFNull";
 import PDFNumber from "./objects/PDFNumber";
-import PDFObject from "./objects/PDFObject";
+import PDFObject, { PDFAsyncObject } from "./objects/PDFObject";
 import PDFRawStream from "./objects/PDFRawStream";
 import PDFRef from "./objects/PDFRef";
 import PDFStream from "./objects/PDFStream";
@@ -39,8 +39,8 @@ type Literal =
   | undefined;
 
 const byAscendingObjectNumber = (
-  [a]: [PDFRef, PDFObject],
-  [b]: [PDFRef, PDFObject],
+  [a]: [PDFRef, PDFObject | PDFAsyncObject],
+  [b]: [PDFRef, PDFObject | PDFAsyncObject],
 ) => a.objectNumber - b.objectNumber;
 
 class PDFContext {
@@ -56,7 +56,7 @@ class PDFContext {
   };
   rng: SimpleRNG;
 
-  private readonly indirectObjects: Map<PDFRef, PDFObject>;
+  private readonly indirectObjects: Map<PDFRef, PDFObject | PDFAsyncObject>;
 
   private pushGraphicsStateContentStreamRef?: PDFRef;
   private popGraphicsStateContentStreamRef?: PDFRef;
@@ -70,7 +70,7 @@ class PDFContext {
     this.rng = SimpleRNG.withSeed(1);
   }
 
-  assign(ref: PDFRef, object: PDFObject): void {
+  assign(ref: PDFRef, object: PDFObject | PDFAsyncObject): void {
     this.indirectObjects.set(ref, object);
     if (ref.objectNumber > this.largestObjectNumber) {
       this.largestObjectNumber = ref.objectNumber;
@@ -82,7 +82,7 @@ class PDFContext {
     return PDFRef.of(this.largestObjectNumber);
   }
 
-  register(object: PDFObject): PDFRef {
+  register(object: PDFObject | PDFAsyncObject): PDFRef {
     const ref = this.nextRef();
     this.assign(ref, object);
     return ref;
@@ -177,7 +177,7 @@ class PDFContext {
     return undefined;
   }
 
-  enumerateIndirectObjects(): [PDFRef, PDFObject][] {
+  enumerateIndirectObjects(): [PDFRef, PDFObject | PDFAsyncObject][] {
     return Array.from(this.indirectObjects.entries()).sort(
       byAscendingObjectNumber,
     );

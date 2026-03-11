@@ -1,3 +1,4 @@
+import { waitForTick } from "../../utils";
 import PDFCrossRefSection from "../document/PDFCrossRefSection";
 import PDFHeader from "../document/PDFHeader";
 import PDFTrailer from "../document/PDFTrailer";
@@ -11,18 +12,16 @@ import {
 import PDFDict from "../objects/PDFDict";
 import PDFInvalidObject from "../objects/PDFInvalidObject";
 import PDFName from "../objects/PDFName";
-import PDFObject from "../objects/PDFObject";
 import PDFRawStream from "../objects/PDFRawStream";
 import PDFRef from "../objects/PDFRef";
-import ByteStream from "./ByteStream";
-import PDFObjectParser from "./PDFObjectParser";
-import PDFObjectStreamParser from "./PDFObjectStreamParser";
-import PDFXRefStreamParser from "./PDFXRefStreamParser";
 import PDFContext from "../PDFContext";
 import CharCodes from "../syntax/CharCodes";
 import { Keywords } from "../syntax/Keywords";
 import { IsDigit } from "../syntax/Numeric";
-import { waitForTick } from "../../utils";
+import ByteStream from "./ByteStream";
+import PDFObjectParser from "./PDFObjectParser";
+import PDFObjectStreamParser from "./PDFObjectStreamParser";
+import PDFXRefStreamParser from "./PDFXRefStreamParser";
 
 class PDFParser extends PDFObjectParser {
   static forBytesWithOptions = (
@@ -78,7 +77,7 @@ class PDFParser extends PDFObjectParser {
   }
 
   private maybeRecoverRoot(): void {
-    const isValidCatalog = (obj?: PDFObject) =>
+    const isValidCatalog = (obj?: unknown) =>
       obj instanceof PDFDict &&
       obj.lookup(PDFName.of("Type")) === PDFName.of("Catalog");
 

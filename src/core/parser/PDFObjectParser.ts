@@ -1,3 +1,4 @@
+import { charFromCode } from "../../utils";
 import {
   PDFObjectParsingError,
   PDFStreamParsingError,
@@ -11,13 +12,11 @@ import PDFHexString from "../objects/PDFHexString";
 import PDFName from "../objects/PDFName";
 import PDFNull from "../objects/PDFNull";
 import PDFNumber from "../objects/PDFNumber";
-import PDFObject from "../objects/PDFObject";
+import PDFObject, { PDFAsyncObject } from "../objects/PDFObject";
 import PDFRawStream from "../objects/PDFRawStream";
 import PDFRef from "../objects/PDFRef";
 import PDFStream from "../objects/PDFStream";
 import PDFString from "../objects/PDFString";
-import BaseParser from "./BaseParser";
-import ByteStream from "./ByteStream";
 import PDFContext from "../PDFContext";
 import PDFCatalog from "../structures/PDFCatalog";
 import PDFPageLeaf from "../structures/PDFPageLeaf";
@@ -27,7 +26,8 @@ import { IsDelimiter } from "../syntax/Delimiters";
 import { Keywords } from "../syntax/Keywords";
 import { IsDigit, IsNumeric } from "../syntax/Numeric";
 import { IsWhitespace } from "../syntax/Whitespace";
-import { charFromCode } from "../../utils";
+import BaseParser from "./BaseParser";
+import ByteStream from "./ByteStream";
 
 // TODO: Throw error if eof is reached before finishing object parse...
 class PDFObjectParser extends BaseParser {
@@ -51,7 +51,7 @@ class PDFObjectParser extends BaseParser {
   }
 
   // TODO: Is it possible to reduce duplicate parsing for ref lookaheads?
-  parseObject(): PDFObject {
+  parseObject(): PDFObject | PDFAsyncObject {
     this.skipWhitespaceAndComments();
 
     if (this.matchKeyword(Keywords.true)) return PDFBool.True;

@@ -19,6 +19,7 @@ jobs:
           cache: "npm"
           registry-url: "https://npm.pkg.github.com/"
           scope: "@loilo-inc"
+      - run: npm ci
       - run: npm run build
       - run: node tools/release.mjs
         env:

@@ -1,5 +1,12 @@
-import { PDFOperator, PDFWidgetAnnotation } from 'src/core';
 import PDFFont from 'src/api/PDFFont';
+import {
+  cmyk,
+  Color,
+  componentsToColor,
+  grayscale,
+  rgb,
+  setFillingColor,
+} from 'src/api/colors';
 import PDFButton from 'src/api/form/PDFButton';
 import PDFCheckBox from 'src/api/form/PDFCheckBox';
 import PDFDropdown from 'src/api/form/PDFDropdown';
@@ -9,30 +16,23 @@ import PDFRadioGroup from 'src/api/form/PDFRadioGroup';
 import PDFSignature from 'src/api/form/PDFSignature';
 import PDFTextField from 'src/api/form/PDFTextField';
 import {
-  drawCheckBox,
-  rotateInPlace,
-  drawRadioButton,
   drawButton,
-  drawTextField,
+  drawCheckBox,
   drawOptionList,
+  drawRadioButton,
+  drawTextField,
+  rotateInPlace,
 } from 'src/api/operations';
-import {
-  rgb,
-  componentsToColor,
-  setFillingColor,
-  grayscale,
-  cmyk,
-  Color,
-} from 'src/api/colors';
-import { reduceRotation, adjustDimsForRotation } from 'src/api/rotations';
-import {
-  layoutMultilineText,
-  layoutCombedText,
-  TextPosition,
-  layoutSinglelineText,
-} from 'src/api/text/layout';
-import { TextAlignment } from 'src/api/text/alignment';
 import { setFontAndSize } from 'src/api/operators';
+import { adjustDimsForRotation, reduceRotation } from 'src/api/rotations';
+import { TextAlignment } from 'src/api/text/alignment';
+import {
+  layoutCombedText,
+  layoutMultilineText,
+  layoutSinglelineText,
+  TextPosition,
+} from 'src/api/text/layout';
+import { PDFOperator, PDFWidgetAnnotation } from 'src/core';
 import { findLastMatch } from 'src/utils';
 
 /*********************** Appearance Provider Types ****************************/
@@ -90,7 +90,7 @@ export type AppearanceMapping<T> = { normal: T; rollover?: T; down?: T };
 type AppearanceOrMapping<T> = T | AppearanceMapping<T>;
 
 // prettier-ignore
-export type AppearanceProviderFor<T extends PDFField> = 
+export type AppearanceProviderFor<T extends PDFField> =
   T extends PDFCheckBox   ? CheckBoxAppearanceProvider
 : T extends PDFRadioGroup ? RadioGroupAppearanceProvider
 : T extends PDFButton     ? ButtonAppearanceProvider
@@ -102,7 +102,7 @@ export type AppearanceProviderFor<T extends PDFField> =
 
 /********************* Appearance Provider Functions **************************/
 
-export const normalizeAppearance = <T>(
+export const normalizeAppearance = <T extends object>(
   appearance: T | AppearanceMapping<T>,
 ): AppearanceMapping<T> => {
   if ('normal' in appearance) return appearance;

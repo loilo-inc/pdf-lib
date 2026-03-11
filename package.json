@@ -1,8 +1,6 @@
 {
-  "name": "pdf-lib",
+  "name": "@loilo-inc/pdf-lib",
   "version": "1.17.1",
-  "description": "Create and modify PDF files with JavaScript",
-  "author": "Andrew Dillon <andrew.dillon.j@gmail.com>",
   "contributors": [
     "jerp (https://github.com/jerp)",
     "Greg Bacchus (https://github.com/gregbacchus)",
@@ -69,13 +67,6 @@
   "module": "es/index.js",
   "unpkg": "dist/pdf-lib.min.js",
   "types": "cjs/index.d.ts",
-  "typesVersions": {
-    "<=3.5": {
-      "*": [
-        "ts3.4/*"
-      ]
-    }
-  },
   "files": [
     "cjs/",
     "dist/",
@@ -118,24 +109,5 @@
     "typescript": "^3.9.5"
   },
   "license": "MIT",
-  "private": false,
-  "homepage": "https://pdf-lib.js.org",
-  "repository": "git+https://github.com/Hopding/pdf-lib.git",
-  "bugs": {
-    "url": "https://github.com/Hopding/pdf-lib/issues"
-  },
-  "keywords": [
-    "pdf-lib",
-    "pdf",
-    "document",
-    "create",
-    "modify",
-    "creation",
-    "modification",
-    "edit",
-    "editing",
-    "typescript",
-    "javascript",
-    "library"
-  ]
+  "private": true
 }

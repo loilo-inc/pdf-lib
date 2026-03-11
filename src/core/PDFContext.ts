@@ -1,5 +1,6 @@
-import pako from "pako";
-
+import { typedArrayFor } from "../utils";
+import { deflateAsync } from "../utils/deflate";
+import { SimpleRNG } from "../utils/rng";
 import PDFHeader from "./document/PDFHeader";
 import { UnexpectedObjectTypeError } from "./errors";
 import PDFArray from "./objects/PDFArray";
@@ -17,8 +18,6 @@ import PDFString from "./objects/PDFString";
 import PDFOperator from "./operators/PDFOperator";
 import Ops from "./operators/PDFOperatorNames";
 import PDFContentStream from "./structures/PDFContentStream";
-import { typedArrayFor } from "../utils";
-import { SimpleRNG } from "../utils/rng";
 
 type LookupKey = PDFRef | PDFObject | undefined;
 
@@ -227,11 +226,11 @@ class PDFContext {
     return PDFRawStream.of(this.obj(dict), typedArrayFor(contents));
   }
 
-  flateStream(
+  async flateStream(
     contents: string | Uint8Array,
     dict: LiteralObject = {},
-  ): PDFRawStream {
-    return this.stream(pako.deflate(typedArrayFor(contents)), {
+  ): Promise<PDFRawStream> {
+    return this.stream(await deflateAsync(typedArrayFor(contents)), {
       ...dict,
       Filter: "FlateDecode",
     });

@@ -1,5 +1,4 @@
-import { describe, it, expect } from "vitest";
-import pako from "pako";
+import { describe, expect, it } from "vitest";
 import {
   mergeIntoTypedArray,
   PDFContext,
@@ -8,19 +7,22 @@ import {
   PDFWriter,
   typedArrayFor,
 } from "../../../src/index";
+import { deflateAsync } from "../../../src/utils/deflate";
 
-const contentStreamText = `
+const setup = async () => {
+  const contentStreamText = `
   BT
     /F1 24 Tf
     100 100 Td
     (Hello World and stuff!) Tj
   ET
 `;
+  const encodedContentStream = await deflateAsync(
+    typedArrayFor(contentStreamText),
+  );
 
-const encodedContentStream = pako.deflate(typedArrayFor(contentStreamText));
-
-const pdfBytes = mergeIntoTypedArray(
-  `%PDF-1.7
+  const pdfBytes = mergeIntoTypedArray(
+    `%PDF-1.7
 %
 
 9000 0 obj
@@ -30,8 +32,8 @@ const pdfBytes = mergeIntoTypedArray(
 >>
 stream
 `,
-  encodedContentStream,
-  `
+    encodedContentStream,
+    `
 endstream
 endobj
 
@@ -76,13 +78,13 @@ endobj
 
 xref
 0 1
-0000000000 65535 f 
+0000000000 65535 f
 9000 5
-0000000016 00000 n 
-0000000158 00000 n 
-0000000270 00000 n 
-0000000411 00000 n 
-0000000477 00000 n 
+0000000016 00000 n
+0000000158 00000 n
+0000000270 00000 n
+0000000411 00000 n
+0000000477 00000 n
 
 trailer
 <<
@@ -93,13 +95,14 @@ trailer
 startxref
 533
 %%EOF`,
-);
-
+  );
+  return { pdfBytes, contentStreamText };
+};
 describe(`PDFWriter`, () => {
   it(`serializes PDFContext objects using Indirect Objects and a Cross Reference table`, async () => {
     const context = PDFContext.create();
-
-    const contentStream = context.flateStream(contentStreamText);
+    const { pdfBytes, contentStreamText } = await setup();
+    const contentStream = await context.flateStream(contentStreamText);
     const contentStreamRef = PDFRef.of(9000);
     context.assign(contentStreamRef, contentStream);
 

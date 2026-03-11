@@ -1,6 +1,4 @@
-import { describe, it, expect } from "vitest";
-import pako from "pako";
-
+import { describe, expect, it } from "vitest";
 import {
   PDFArray,
   PDFBool,
@@ -15,6 +13,7 @@ import {
   PDFString,
 } from "../../src/core";
 import { mergeIntoTypedArray } from "../../src/utils";
+import { deflateAsync } from "../../src/utils/deflate";
 
 describe(`PDFContext`, () => {
   it(`retains assigned objects`, () => {
@@ -77,10 +76,10 @@ describe(`PDFContext`, () => {
     expect(context.lookup(numberRef)).toBe(pdfNumber);
   });
 
-  it(`stream creation`, () => {
+  it(`stream creation`, async () => {
     const context = PDFContext.create();
 
-    const stream = context.flateStream("stuff and things!");
+    const stream = await context.flateStream("stuff and things!");
     const buffer = new Uint8Array(stream.sizeInBytes());
     stream.copyBytesInto(buffer, 0);
 
@@ -91,7 +90,7 @@ describe(`PDFContext`, () => {
         "/Length 25\n",
         ">>\n",
         "stream\n",
-        pako.deflate("stuff and things!"),
+        await deflateAsync("stuff and things!"),
         "\nendstream",
       ),
     );

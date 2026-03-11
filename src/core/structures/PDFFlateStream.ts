@@ -1,10 +1,8 @@
-import pako from "pako";
-
+import { Cache } from "../../utils";
 import { MethodNotImplementedError } from "../errors";
 import PDFDict from "../objects/PDFDict";
 import PDFName from "../objects/PDFName";
 import PDFStream from "../objects/PDFStream";
-import { Cache } from "../../utils";
 
 class PDFFlateStream extends PDFStream {
   protected readonly contentsCache: Cache<Uint8Array>;

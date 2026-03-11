@@ -1,6 +1,4 @@
-import { describe, it, expect } from "vitest";
-import pako from "pako";
-
+import { describe, expect, it } from "vitest";
 import {
   mergeIntoTypedArray,
   PDFContext,
@@ -8,6 +6,7 @@ import {
   PDFRef,
   toCharCode,
 } from "../../../src/index";
+import { deflateAsync } from "../../../src/utils/deflate";
 
 describe(`PDFCrossRefStream`, () => {
   const context = PDFContext.create();
@@ -112,7 +111,7 @@ describe(`PDFCrossRefStream`, () => {
     );
   });
 
-  it(`can be serialized when encoded`, () => {
+  it(`can be serialized when encoded`, async () => {
     const stream = PDFCrossRefStream.create(dict, true);
     stream.addUncompressedEntry(PDFRef.of(2), 300);
     stream.addCompressedEntry(PDFRef.of(3), PDFRef.of(10), 0);
@@ -131,7 +130,7 @@ describe(`PDFCrossRefStream`, () => {
       1,  2,  88,    0,    0,
       2,  0,  10,    0,    1,
     ]);
-    const encodedEntries = pako.deflate(expectedEntries);
+    const encodedEntries = await deflateAsync(expectedEntries);
 
     expect(stream.copyBytesInto(buffer, 2)).toBe(135);
     expect(buffer).toEqual(

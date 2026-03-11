@@ -26,15 +26,13 @@
   ],
   "dependencies": {
     "@pdf-lib/standard-fonts": "^1.0.0",
-    "@pdf-lib/upng": "^1.0.1",
-    "pako": "^2.1.0"
+    "@pdf-lib/upng": "^1.0.1"
   },
   "devDependencies": {
     "esbuild": "^0.27.3",
     "tsx": "^4.21.0",
     "@pdf-lib/fontkit": "^1.1.0",
     "@types/node": "^25.4.0",
-    "@types/pako": "^2.0.0",
     "@vitest/coverage-v8": "^4.0.18",
     "express": "^5.2.1",
     "prettier": "^3.8.1",

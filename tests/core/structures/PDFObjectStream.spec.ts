@@ -1,6 +1,4 @@
-import { describe, it, expect } from "vitest";
-import pako from "pako";
-
+import { describe, expect, it } from "vitest";
 import {
   mergeIntoTypedArray,
   PDFContext,
@@ -12,6 +10,7 @@ import {
   toCharCode,
   typedArrayFor,
 } from "../../../src/index";
+import { deflateAsync } from "../../../src/utils/deflate";
 
 describe(`PDFObjectStream`, () => {
   const context = PDFContext.create();
@@ -104,7 +103,7 @@ describe(`PDFObjectStream`, () => {
     );
   });
 
-  it(`can be serialized when encoded`, () => {
+  it(`can be serialized when encoded`, async () => {
     const contents =
       "1 0 2 4 3 9 4 15 5 24 6 31 7 39 8 44 9 47 " +
       "[ ]\n" +
@@ -116,7 +115,7 @@ describe(`PDFObjectStream`, () => {
       "null\n" +
       "21\n" +
       "(Stuff and thingz)\n";
-    const encodedContents = pako.deflate(contents);
+    const encodedContents = await deflateAsync(contents);
 
     const stream = PDFObjectStream.withContextAndObjects(
       context,

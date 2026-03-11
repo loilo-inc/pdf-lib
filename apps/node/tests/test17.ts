@@ -15,7 +15,7 @@ import fontkit from "@pdf-lib/fontkit";
 
 export default async (assets: Assets) => {
   const pdfDoc = await PDFDocument.load(assets.pdfs.fancy_fields);
-
+  pdfDoc.setModificationDate(new Date("2018-12-21T07:00:11.000Z"));
   pdfDoc.registerFontkit(fontkit);
   const ubuntuFont = await pdfDoc.embedFont(assets.fonts.ttf.ubuntu_r);
 

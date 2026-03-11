@@ -8,6 +8,7 @@ export default async (assets: Assets) => {
     pdfs.with_newline_whitespace_in_indirect_object_numbers,
     { parseSpeed: ParseSpeeds.Fastest },
   );
+  pdfDoc.setModificationDate(new Date("2018-12-21T07:00:11.000Z"));
 
   const helveticaFont = await pdfDoc.embedFont(StandardFonts.Helvetica);
 

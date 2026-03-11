@@ -15,6 +15,7 @@ export default async (assets: Assets) => {
   const pdfDoc = await PDFDocument.load(pdfs.normal_base64, {
     parseSpeed: ParseSpeeds.Fastest,
   });
+  pdfDoc.setModificationDate(new Date("2018-12-21T07:00:11.000Z"));
 
   const minionsLaughingImage = await pdfDoc.embedJpg(
     images.jpg.minions_laughing,

@@ -56,8 +56,9 @@ describe("node integration test", () => {
       if (!fs.existsSync(outfile)) {
         await fs.promises.writeFile(outfile, pdfBytes);
       } else {
+        const expectedBytes = await fs.promises.readFile(outfile);
         const decoder = new TextDecoder();
-        expect(decoder.decode(pdfBytes)).toMatchSnapshot(`test${_idx}.pdf`);
+        expect(decoder.decode(pdfBytes)).toEqual(decoder.decode(expectedBytes));
       }
     },
   );

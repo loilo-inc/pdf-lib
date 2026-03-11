@@ -158,6 +158,7 @@ const breakTextIntoLines = (
 
 export default async (_assets: Assets) => {
   const pdfDoc = await PDFDocument.create();
+  pdfDoc.setModificationDate(new Date("2018-12-21T07:00:11.000Z"));
 
   const helveticaFont = await pdfDoc.embedFont(StandardFonts.Helvetica);
   const helveticaBoldFont = await pdfDoc.embedFont(StandardFonts.HelveticaBold);

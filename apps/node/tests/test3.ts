@@ -15,6 +15,7 @@ export default async (assets: Assets) => {
     parseSpeed: ParseSpeeds.Fastest,
     updateMetadata: false,
   });
+  pdfDoc.setModificationDate(new Date("2018-12-21T07:00:11.000Z"));
 
   await pdfDoc.attach(pdfs.normal_base64, "tax_form.pdf", {
     mimeType: "application/pdf",

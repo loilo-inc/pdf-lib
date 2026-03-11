@@ -3,6 +3,7 @@ import { Assets } from "../index";
 
 const createDonorPdf = async () => {
   const pdfDoc = await PDFDocument.create();
+  pdfDoc.setModificationDate(new Date("2018-12-21T07:00:11.000Z"));
   const helveticaFont = await pdfDoc.embedFont(StandardFonts.Helvetica);
 
   const page = pdfDoc.addPage([500, 500]);

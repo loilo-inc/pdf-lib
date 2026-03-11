@@ -12,7 +12,7 @@ export default async (assets: Assets) => {
     parseSpeed: ParseSpeeds.Fastest,
     updateMetadata: false,
   });
-
+  pdfDoc.setModificationDate(new Date("2018-12-21T07:00:11.000Z"));
   pdfDoc.registerFontkit(fontkit);
 
   const ubuntuFont = await pdfDoc.embedFont(fonts.ttf.ubuntu_r, {

@@ -10,6 +10,7 @@ export default async (assets: Assets) => {
   });
 
   pdfDoc.registerFontkit(fontkit);
+  pdfDoc.setModificationDate(new Date("2018-12-21T07:00:11.000Z"));
 
   const ubuntuFont = await pdfDoc.embedFont(fonts.ttf.ubuntu_r, {
     subset: true,

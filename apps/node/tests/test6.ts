@@ -9,7 +9,7 @@ export default async (assets: Assets) => {
     pdfs.with_missing_endstream_eol_and_polluted_ctm,
     { parseSpeed: ParseSpeeds.Fastest },
   );
-
+  pdfDoc.setModificationDate(new Date("2018-12-21T07:00:11.000Z"));
   pdfDoc.registerFontkit(fontkit);
 
   await pdfDoc.attach(pdfs.us_constitution, "us_constitution.pdf", {

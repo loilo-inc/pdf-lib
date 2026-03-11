@@ -84,6 +84,7 @@ const loadB = async (assets: Assets) => {
 // Based on test16.ts
 const loadC = async (assets: Assets) => {
   const pdfDoc = await PDFDocument.load(assets.pdfs.with_xfa_fields);
+  pdfDoc.setModificationDate(new Date("2018-12-21T07:00:11.000Z"));
   const form = pdfDoc.getForm();
 
   form

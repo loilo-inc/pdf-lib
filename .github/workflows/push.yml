@@ -16,7 +16,7 @@ jobs:
           node-version: 24
           cache: "npm"
       - run: npm ci
-      - run: npm run lint
+      - run: npm run fmtcheck
       - run: npm run tsc
       - run: npm run apps:web:tsc
       - run: npm testcov

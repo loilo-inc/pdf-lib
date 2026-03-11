@@ -3,6 +3,7 @@
   "scripts": {
     "tsc": "tsc",
     "fmt": "prettier --write ./src ./tests ./apps",
+    "fmtcheck": "prettier --check ./src ./tests ./apps",
     "clean": "rm -rf dist",
     "test": "vitest run --config vitest.config.ts",
     "testcov": "vitest run --config vitest.config.ts --coverage",

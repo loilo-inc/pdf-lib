@@ -1,6 +1,7 @@
 import fontkit from '@pdf-lib/fontkit';
 import { Assets } from '..';
 import {
+  AFRelationship,
   clip,
   clipEvenOdd,
   closePath,
@@ -20,8 +21,7 @@ import {
   setLineJoin,
   StandardFonts,
   typedArrayFor,
-  AFRelationship,
-} from '../../..';
+} from '../../../src';
 
 const ipsumLines = [
   'Eligendi est pariatur quidem in non excepturi et.',

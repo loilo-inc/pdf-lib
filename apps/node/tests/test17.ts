@@ -1,15 +1,15 @@
 import { Assets } from '..';
 import {
-  PDFDocument,
-  StandardFonts,
-  drawRectangle,
-  rgb,
-  degrees,
-  drawText,
-  PDFFont,
-  drawEllipse,
-  PDFWidgetAnnotation,
-} from '../../..';
+    degrees,
+    drawEllipse,
+    drawRectangle,
+    drawText,
+    PDFDocument,
+    PDFFont,
+    PDFWidgetAnnotation,
+    rgb,
+    StandardFonts,
+} from '../../../src';
 
 import fontkit from '@pdf-lib/fontkit';
 

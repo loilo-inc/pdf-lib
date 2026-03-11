@@ -1,4 +1,4 @@
-import PDFFont from 'src/api/PDFFont';
+import PDFFont from '../PDFFont';
 import {
   cmyk,
   Color,
@@ -6,15 +6,15 @@ import {
   grayscale,
   rgb,
   setFillingColor,
-} from 'src/api/colors';
-import PDFButton from 'src/api/form/PDFButton';
-import PDFCheckBox from 'src/api/form/PDFCheckBox';
-import PDFDropdown from 'src/api/form/PDFDropdown';
-import PDFField from 'src/api/form/PDFField';
-import PDFOptionList from 'src/api/form/PDFOptionList';
-import PDFRadioGroup from 'src/api/form/PDFRadioGroup';
-import PDFSignature from 'src/api/form/PDFSignature';
-import PDFTextField from 'src/api/form/PDFTextField';
+} from '../colors';
+import PDFButton from './PDFButton';
+import PDFCheckBox from './PDFCheckBox';
+import PDFDropdown from './PDFDropdown';
+import PDFField from './PDFField';
+import PDFOptionList from './PDFOptionList';
+import PDFRadioGroup from './PDFRadioGroup';
+import PDFSignature from './PDFSignature';
+import PDFTextField from './PDFTextField';
 import {
   drawButton,
   drawCheckBox,
@@ -22,18 +22,18 @@ import {
   drawRadioButton,
   drawTextField,
   rotateInPlace,
-} from 'src/api/operations';
-import { setFontAndSize } from 'src/api/operators';
-import { adjustDimsForRotation, reduceRotation } from 'src/api/rotations';
-import { TextAlignment } from 'src/api/text/alignment';
+} from '../operations';
+import { setFontAndSize } from '../operators';
+import { adjustDimsForRotation, reduceRotation } from '../rotations';
+import { TextAlignment } from '../text/alignment';
 import {
   layoutCombedText,
   layoutMultilineText,
   layoutSinglelineText,
   TextPosition,
-} from 'src/api/text/layout';
-import { PDFOperator, PDFWidgetAnnotation } from 'src/core';
-import { findLastMatch } from 'src/utils';
+} from '../text/layout';
+import { PDFOperator, PDFWidgetAnnotation } from '../../core';
+import { findLastMatch } from '../../utils';
 
 /*********************** Appearance Provider Types ****************************/
 

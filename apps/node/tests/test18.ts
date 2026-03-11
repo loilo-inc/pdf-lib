@@ -1,5 +1,5 @@
 import { Assets } from '..';
-import { PDFDocument } from '../../..';
+import { PDFDocument } from '../../../src';
 
 import fontkit from '@pdf-lib/fontkit';
 

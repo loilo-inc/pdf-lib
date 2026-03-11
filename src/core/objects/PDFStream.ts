@@ -6,7 +6,7 @@ import PDFObject from "./PDFObject";
 import PDFContext from "../PDFContext";
 import CharCodes from "../syntax/CharCodes";
 
-class PDFStream extends PDFObject {
+abstract class PDFStream extends PDFObject {
   readonly dict: PDFDict;
 
   constructor(dict: PDFDict) {
@@ -18,23 +18,12 @@ class PDFStream extends PDFObject {
     throw new MethodNotImplementedError(this.constructor.name, "clone");
   }
 
-  getContentsString(): string {
-    throw new MethodNotImplementedError(
-      this.constructor.name,
-      "getContentsString",
-    );
-  }
+  abstract getContentsString(): string;
 
-  getContents(): Uint8Array {
-    throw new MethodNotImplementedError(this.constructor.name, "getContents");
-  }
+  abstract getContents(): Uint8Array;
 
-  getContentsSize(): number {
-    throw new MethodNotImplementedError(
-      this.constructor.name,
-      "getContentsSize",
-    );
-  }
+  abstract getContentsSize(): number;
+
 
   updateDict(): void {
     const contentsSize = this.getContentsSize();

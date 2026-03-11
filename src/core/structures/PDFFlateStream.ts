@@ -1,10 +1,9 @@
 import { Cache } from "../../utils";
-import { MethodNotImplementedError } from "../errors";
 import PDFDict from "../objects/PDFDict";
 import PDFName from "../objects/PDFName";
 import PDFStream from "../objects/PDFStream";
 
-class PDFFlateStream extends PDFStream {
+abstract class PDFFlateStream extends PDFStream {
   protected readonly contentsCache: Cache<Uint8Array>;
   protected readonly encode: boolean;
 
@@ -30,12 +29,7 @@ class PDFFlateStream extends PDFStream {
     return this.contentsCache.access().length;
   }
 
-  getUnencodedContents(): Uint8Array {
-    throw new MethodNotImplementedError(
-      this.constructor.name,
-      "getUnencodedContents",
-    );
-  }
+  abstract getUnencodedContents(): Uint8Array;
 }
 
 export default PDFFlateStream;

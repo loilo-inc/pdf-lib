@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
   <head>
     <meta
@@ -33,15 +33,15 @@
   </body>
 
   <script type="text/javascript">
-    startFpsTracker('animation-target');
+    startFpsTracker("animation-target");
 
     const fetchBinaryAsset = (asset) =>
       fetch(`/assets/${asset}`).then((res) => res.arrayBuffer());
 
     const renderInIframe = (pdfBytes) => {
-      const blob = new Blob([pdfBytes], { type: 'application/pdf' });
+      const blob = new Blob([pdfBytes], { type: "application/pdf" });
       const blobUrl = URL.createObjectURL(blob);
-      document.getElementById('iframe').src = blobUrl;
+      document.getElementById("iframe").src = blobUrl;
     };
 
     // prettier-ignore
@@ -100,7 +100,7 @@
       page.drawRectangle({ ...page.getSize(), color: solarizedWhite });
 
       const etweImg = await pdfDoc.embedPng(
-        await fetchBinaryAsset('images/etwe.png'),
+        await fetchBinaryAsset("images/etwe.png"),
       );
       page.drawImage(etweImg, {
         x: 25,
@@ -109,7 +109,7 @@
       });
 
       const selfDriveImg = await pdfDoc.embedPng(
-        await fetchBinaryAsset('images/self_drive.png'),
+        await fetchBinaryAsset("images/self_drive.png"),
       );
       page.drawImage(selfDriveImg, {
         x: page.getWidth() / 2,

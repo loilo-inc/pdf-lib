@@ -8,6 +8,7 @@
     "release:tag": "TAG=\"v$(npm run --silent get:version)\" && git tag $TAG && git push origin $TAG",
     "get:version": "node --eval 'console.log(require(`./package.json`).version)'",
     "typecheck": "tsc --noEmit --incremental false --tsBuildInfoFile null",
+    "fmt": "prettier --write ./src ./tests ./apps",
     "test": "vitest run --config vitest.config.ts",
     "testcov": "vitest run --config vitest.config.ts --coverage",
     "build": "tsc -p tsconfig.json",
@@ -15,9 +16,9 @@
     "apps:web": "http-server -c-1 .",
     "apps:web:mac": "bash -c 'sleep 1 && open http://localhost:8080/apps/web/test1.html' & npm run apps:web"
   },
-  "types": "dust/index.d.ts",
+  "types": "dist/index.d.ts",
   "files": [
-    "dust/",
+    "dist/",
     "src/",
     "LICENSE",
     "package.json",

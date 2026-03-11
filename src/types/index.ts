@@ -1,1 +1,1 @@
-export { TransformationMatrix } from './matrix';
+export { TransformationMatrix } from "./matrix";

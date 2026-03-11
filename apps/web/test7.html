@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
   <head>
     <meta
@@ -29,12 +29,12 @@
       </button>
     </div>
     <div id="animation-target"></div>
-    <div id="result-stats" style="max-width: 1000px; text-align: center;"></div>
+    <div id="result-stats" style="max-width: 1000px; text-align: center"></div>
     <iframe id="iframe"></iframe>
   </body>
 
   <script type="text/javascript">
-    startFpsTracker('animation-target');
+    startFpsTracker("animation-target");
 
     const fetchAsset = (asset) =>
       fetch(`/assets/${asset}`)
@@ -42,9 +42,9 @@
         .then((res) => new Uint8Array(res));
 
     const renderInIframe = (pdfBytes) => {
-      const blob = new Blob([pdfBytes], { type: 'application/pdf' });
+      const blob = new Blob([pdfBytes], { type: "application/pdf" });
       const blobUrl = URL.createObjectURL(blob);
-      document.getElementById('iframe').src = blobUrl;
+      document.getElementById("iframe").src = blobUrl;
     };
 
     const createDonorPdf = async () => {
@@ -58,7 +58,7 @@
       page.moveTo(50, 225);
       page.setFont(helveticaFont);
       page.setFontSize(50);
-      page.drawText('I am upside down!');
+      page.drawText("I am upside down!");
       page.setRotation(degrees(180));
 
       return pdfDoc;
@@ -74,11 +74,11 @@
         linearizedWithObjectStreamsBytes,
         withLargePageCountBytes,
       ] = await Promise.all([
-        fetchAsset('pdfs/with_missing_endstream_eol_and_polluted_ctm.pdf'),
-        fetchAsset('pdfs/normal.pdf'),
-        fetchAsset('pdfs/with_update_sections.pdf'),
-        fetchAsset('pdfs/linearized_with_object_streams.pdf'),
-        fetchAsset('pdfs/with_large_page_count.pdf'),
+        fetchAsset("pdfs/with_missing_endstream_eol_and_polluted_ctm.pdf"),
+        fetchAsset("pdfs/normal.pdf"),
+        fetchAsset("pdfs/with_update_sections.pdf"),
+        fetchAsset("pdfs/linearized_with_object_streams.pdf"),
+        fetchAsset("pdfs/with_large_page_count.pdf"),
       ]);
 
       const pdfDoc = await PDFDocument.load(
@@ -112,7 +112,7 @@
       }
 
       const ratio = (sizeOfCreatedPdf / sizeOfAllDonorPdfs).toFixed(2);
-      document.getElementById('result-stats').innerHTML = `
+      document.getElementById("result-stats").innerHTML = `
         <p>
           Since pdf-lib only copies the minimum necessary resources from a 
           donor PDF needed to show a copied page, the size of the PDF we create 

@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
   <head>
     <meta
@@ -33,7 +33,7 @@
   </body>
 
   <script type="text/javascript">
-    startFpsTracker('animation-target');
+    startFpsTracker("animation-target");
 
     const fetchAsset = (asset) =>
       fetch(`/assets/${asset}`)
@@ -41,9 +41,9 @@
         .then((res) => new Uint8Array(res));
 
     const renderInIframe = (pdfBytes) => {
-      const blob = new Blob([pdfBytes], { type: 'application/pdf' });
+      const blob = new Blob([pdfBytes], { type: "application/pdf" });
       const blobUrl = URL.createObjectURL(blob);
-      document.getElementById('iframe').src = blobUrl;
+      document.getElementById("iframe").src = blobUrl;
     };
 
     async function test() {
@@ -51,7 +51,7 @@
 
       const [inputPdfBytes] = await Promise.all([
         fetchAsset(
-          'pdfs/with_newline_whitespace_in_indirect_object_numbers.pdf',
+          "pdfs/with_newline_whitespace_in_indirect_object_numbers.pdf",
         ),
       ]);
 
@@ -64,7 +64,7 @@
       const [firstPage] = pages;
 
       const { width, height } = firstPage.getSize();
-      const text = 'pdf-lib is awesome!';
+      const text = "pdf-lib is awesome!";
       const textWidth = helveticaFont.widthOfTextAtSize(text, 75);
       firstPage.moveTo(width / 2 - textWidth / 2, height - 100);
       firstPage.setFont(helveticaFont);

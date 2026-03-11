@@ -1,8 +1,14 @@
-import fs from 'fs';
-import { PDFDocument } from '../../../src/api';
-import { PDFContext, PDFPageEmbedder, PDFRawStream, PDFRef } from '../../../src/core';
+import { describe, it, expect } from "vitest";
+import fs from "fs";
+import { PDFDocument } from "../../../src/api";
+import {
+  PDFContext,
+  PDFPageEmbedder,
+  PDFRawStream,
+  PDFRef,
+} from "../../../src/core";
 
-const examplePdf = fs.readFileSync('./assets/pdfs/normal.pdf');
+const examplePdf = fs.readFileSync("./assets/pdfs/normal.pdf");
 
 const examplePage = async () => {
   const doc = await PDFDocument.load(examplePdf);

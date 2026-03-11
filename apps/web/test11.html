@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
   <head>
     <meta
@@ -37,7 +37,7 @@
   </body>
 
   <script type="text/javascript">
-    startFpsTracker('animation-target');
+    startFpsTracker("animation-target");
 
     const fetchAsset = (asset) =>
       fetch(`/assets/${asset}`)
@@ -45,21 +45,21 @@
         .then((res) => new Uint8Array(res));
 
     const renderInIframe = (pdfBytes) => {
-      const blob = new Blob([pdfBytes], { type: 'application/pdf' });
+      const blob = new Blob([pdfBytes], { type: "application/pdf" });
       const blobUrl = URL.createObjectURL(blob);
-      document.getElementById('iframe').src = blobUrl;
+      document.getElementById("iframe").src = blobUrl;
     };
 
     const breakTextIntoLines = (text, size, font, maxWidth) => {
       const lines = [];
       let textIdx = 0;
       while (textIdx < text.length) {
-        let line = '';
+        let line = "";
         while (textIdx < text.length) {
-          if (text.charAt(textIdx) === '\n') {
+          if (text.charAt(textIdx) === "\n") {
             lines.push(line);
             textIdx += 1;
-            line = '';
+            line = "";
             continue;
           }
           const [glyph] = PDFLib.charAtIndex(text, textIdx);
@@ -91,7 +91,7 @@
       const { PDFDocument, StandardFonts } = PDFLib;
 
       const [sourceHanBytes] = await Promise.all([
-        fetchAsset('fonts/source_hans_jp/SourceHanSerifJP-Regular.otf'),
+        fetchAsset("fonts/source_hans_jp/SourceHanSerifJP-Regular.otf"),
       ]);
 
       const pdfDoc = await PDFDocument.create();
@@ -103,7 +103,7 @@
         StandardFonts.HelveticaBold,
       );
 
-      const title = 'Embedded UTF-16 Font Demo';
+      const title = "Embedded UTF-16 Font Demo";
       const description = `
         In addition to the standard 14 fonts provided by PDF readers, the PDF
         specification allows PDF documents to embed their own fonts. The standard
@@ -134,7 +134,7 @@
         y: 700 - 100,
         x: 650 / 2 - helveticaBoldFont.widthOfTextAtSize(title, 35) / 2,
       });
-      titlePage.drawText(descriptionLines.join('\n'), {
+      titlePage.drawText(descriptionLines.join("\n"), {
         font: helveticaFont,
         size: 16,
         y: 525,
@@ -161,7 +161,7 @@
 
       sourceHanLineGroups.forEach((lines) => {
         const page = pdfDoc.addPage([650, 700]);
-        page.drawText(lines.join('\n'), {
+        page.drawText(lines.join("\n"), {
           font: sourceHanFont,
           size: sourceHanFontSize,
           x: 25,

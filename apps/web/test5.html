@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
   <head>
     <meta
@@ -33,7 +33,7 @@
   </body>
 
   <script type="text/javascript">
-    startFpsTracker('animation-target');
+    startFpsTracker("animation-target");
 
     const fetchAsset = (asset) =>
       fetch(`/assets/${asset}`)
@@ -41,17 +41,17 @@
         .then((res) => new Uint8Array(res));
 
     const renderInIframe = (pdfBytes) => {
-      const blob = new Blob([pdfBytes], { type: 'application/pdf' });
+      const blob = new Blob([pdfBytes], { type: "application/pdf" });
       const blobUrl = URL.createObjectURL(blob);
-      document.getElementById('iframe').src = blobUrl;
+      document.getElementById("iframe").src = blobUrl;
     };
 
     async function test() {
       const { PDFDocument, rgb, StandardFonts } = PDFLib;
 
       const [inputPdfBytes, minionsBananaAlphaBytes] = await Promise.all([
-        fetchAsset('pdfs/with_large_page_count.pdf'),
-        fetchAsset('images/minions_banana_alpha.png'),
+        fetchAsset("pdfs/with_large_page_count.pdf"),
+        fetchAsset("images/minions_banana_alpha.png"),
       ]);
 
       const pdfDoc = await PDFDocument.load(inputPdfBytes);
@@ -83,7 +83,7 @@
         newPage.setFont(timesRomanFont);
         newPage.setFontSize(fontSize);
 
-        const text = 'This page was interleaved by pdf-lib!';
+        const text = "This page was interleaved by pdf-lib!";
         const textWidth = timesRomanFont.widthOfTextAtSize(text, fontSize);
         const textHeight = timesRomanFont.heightAtSize(fontSize);
 

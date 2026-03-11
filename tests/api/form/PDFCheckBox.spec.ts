@@ -1,8 +1,8 @@
-import fs from 'fs';
-import { AnnotationFlags, PDFDocument } from '../../../src/index';
-import { describe, expect, it } from 'vitest';
+import fs from "fs";
+import { AnnotationFlags, PDFDocument } from "../../../src/index";
+import { describe, it, expect } from "vitest";
 
-const fancyFieldsPdfBytes = fs.readFileSync('assets/pdfs/fancy_fields.pdf');
+const fancyFieldsPdfBytes = fs.readFileSync("assets/pdfs/fancy_fields.pdf");
 const pdfDocPromise = PDFDocument.load(fancyFieldsPdfBytes);
 
 describe(`PDFCheckBox`, () => {
@@ -11,14 +11,14 @@ describe(`PDFCheckBox`, () => {
 
     const form = pdfDoc.getForm();
 
-    const isAFairy = form.getCheckBox('Are You A Fairy? 🌿');
+    const isAFairy = form.getCheckBox("Are You A Fairy? 🌿");
     const isPowerLevelOver9000 = form.getCheckBox(
-      'Is Your Power Level Over 9000? 💪',
+      "Is Your Power Level Over 9000? 💪",
     );
     const onePunch = form.getCheckBox(
-      'Can You Defeat Enemies In One Punch? 👊',
+      "Can You Defeat Enemies In One Punch? 👊",
     );
-    const everLetMeDown = form.getCheckBox('Will You Ever Let Me Down? ☕️');
+    const everLetMeDown = form.getCheckBox("Will You Ever Let Me Down? ☕️");
 
     expect(isAFairy.isChecked()).toBe(true);
     expect(isPowerLevelOver9000.isChecked()).toBe(false);
@@ -31,7 +31,7 @@ describe(`PDFCheckBox`, () => {
 
     const form = pdfDoc.getForm();
 
-    const isAFairy = form.getCheckBox('Are You A Fairy? 🌿');
+    const isAFairy = form.getCheckBox("Are You A Fairy? 🌿");
 
     expect(isAFairy.isExported()).toBe(true);
     expect(isAFairy.isReadOnly()).toBe(false);
@@ -44,7 +44,7 @@ describe(`PDFCheckBox`, () => {
 
     const form = pdfDoc.getForm();
 
-    const checkBox = form.createCheckBox('a.new.check.box');
+    const checkBox = form.createCheckBox("a.new.check.box");
 
     const widgets = () => checkBox.acroField.getWidgets();
     expect(widgets().length).toBe(0);
@@ -60,7 +60,7 @@ describe(`PDFCheckBox`, () => {
 
     const form = pdfDoc.getForm();
 
-    const checkBox = form.createCheckBox('a.new.check.box');
+    const checkBox = form.createCheckBox("a.new.check.box");
 
     const widgets = () => checkBox.acroField.getWidgets();
     expect(widgets().length).toBe(0);

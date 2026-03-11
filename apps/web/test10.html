@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
   <head>
     <meta
@@ -33,7 +33,7 @@
   </body>
 
   <script type="text/javascript">
-    startFpsTracker('animation-target');
+    startFpsTracker("animation-target");
 
     const fetchAsset = (asset) =>
       fetch(`/assets/${asset}`)
@@ -41,9 +41,9 @@
         .then((res) => new Uint8Array(res));
 
     const renderInIframe = (pdfBytes) => {
-      const blob = new Blob([pdfBytes], { type: 'application/pdf' });
+      const blob = new Blob([pdfBytes], { type: "application/pdf" });
       const blobUrl = URL.createObjectURL(blob);
-      document.getElementById('iframe').src = blobUrl;
+      document.getElementById("iframe").src = blobUrl;
     };
 
     // prettier-ignore
@@ -76,8 +76,8 @@
     ];
 
     const winAnsiString = String.fromCodePoint(...winAnsiCodePoints)
-      .split('')
-      .join(' ');
+      .split("")
+      .join(" ");
 
     // prettier-ignore
     const zapfDingbatsCodePoints = [
@@ -107,8 +107,8 @@
     ];
 
     const zapfDingbatsString = String.fromCodePoint(...zapfDingbatsCodePoints)
-      .split('')
-      .join(' ');
+      .split("")
+      .join(" ");
 
     // prettier-ignore
     const symbolCodePoints = [
@@ -137,8 +137,8 @@
     ];
 
     const symbolString = String.fromCodePoint(...symbolCodePoints)
-      .split('')
-      .join(' ');
+      .split("")
+      .join(" ");
 
     const addPageWithFonts = (pdfDoc, text, fontSize, gapAmt, fontNames) => {
       const page = pdfDoc.addPage([650, 700]);
@@ -154,7 +154,7 @@
           x: 650 / 2 - font.widthOfTextAtSize(fontName, fontSize) / 2,
         });
         page.moveTo(0, page.getY() - font.heightAtSize(fontSize) - 10);
-        page.drawText(lines.join('\n'), {
+        page.drawText(lines.join("\n"), {
           font,
           size: fontSize,
           x: 25,
@@ -172,12 +172,12 @@
       const lines = [];
       let textIdx = 0;
       while (textIdx < text.length) {
-        let line = '';
+        let line = "";
         while (textIdx < text.length) {
-          if (text.charAt(textIdx) === '\n') {
+          if (text.charAt(textIdx) === "\n") {
             lines.push(line);
             textIdx += 1;
-            line = '';
+            line = "";
             continue;
           }
           const newLine = line + text.charAt(textIdx);
@@ -200,7 +200,7 @@
         StandardFonts.HelveticaBold,
       );
 
-      const title = 'Standard 14 Fonts Demo';
+      const title = "Standard 14 Fonts Demo";
       const description = `
         The PDF specification requires that PDF readers provide 14 standard fonts. 
         PDF documents may use these fonts without having to embed the fonts 
@@ -242,7 +242,7 @@
         x: 650 / 2 - helveticaBoldFont.widthOfTextAtSize(title, 35) / 2,
         lineHeight: 35,
       });
-      titlePage.drawText(descriptionLines.join('\n'), {
+      titlePage.drawText(descriptionLines.join("\n"), {
         font: helveticaFont,
         size: 16,
         y: 525,
@@ -290,19 +290,19 @@
       page.moveTo(0, 700);
 
       page.moveDown(100);
-      page.drawText('ZapfDingbats', {
+      page.drawText("ZapfDingbats", {
         font: helveticaFont,
         size: zapfDingbatsFontSize,
         x:
           650 / 2 -
           helveticaFont.widthOfTextAtSize(
-            'ZapfDingbats',
+            "ZapfDingbats",
             zapfDingbatsFontSize,
           ) /
             2,
       });
       page.moveDown(zapfDingbatsFont.heightAtSize(zapfDingbatsFontSize) + 10);
-      page.drawText(zapfDingbatsLines.join('\n'), {
+      page.drawText(zapfDingbatsLines.join("\n"), {
         font: zapfDingbatsFont,
         size: zapfDingbatsFontSize,
         x: 25,
@@ -320,15 +320,15 @@
       );
 
       page.moveDown(275);
-      page.drawText('Symbol', {
+      page.drawText("Symbol", {
         font: helveticaFont,
         size: symbolFontSize,
         x:
           650 / 2 -
-          helveticaFont.widthOfTextAtSize('Symbol', symbolFontSize) / 2,
+          helveticaFont.widthOfTextAtSize("Symbol", symbolFontSize) / 2,
       });
       page.moveDown(symbolFont.heightAtSize(symbolFontSize) + 10);
-      page.drawText(symbolLines.join('\n'), {
+      page.drawText(symbolLines.join("\n"), {
         font: symbolFont,
         size: symbolFontSize,
         x: 25,

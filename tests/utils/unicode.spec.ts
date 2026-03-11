@@ -1,9 +1,10 @@
+import { describe, it, expect } from "vitest";
 import {
   mergeIntoTypedArray,
   utf16Encode,
   utf8Encode,
   utf16Decode,
-} from '../../src/utils';
+} from "../../src/utils";
 
 const utf8BOM = new Uint8Array([0xef, 0xbb, 0xbf]);
 const utf16BOM = new Uint16Array([0xfeff]);
@@ -16,7 +17,7 @@ const withUtf16Bom = (encoding: Uint16Array) =>
 
 describe(`utf8Encode`, () => {
   it(`encodes <U+004D U+0430 U+4E8C U+10302> to UTF-8`, () => {
-    const input = '\u{004D}\u{0430}\u{4E8C}\u{10302}';
+    const input = "\u{004D}\u{0430}\u{4E8C}\u{10302}";
 
     // prettier-ignore
     const expected = new Uint8Array([
@@ -32,7 +33,7 @@ describe(`utf8Encode`, () => {
   });
 
   it(`encodes <U+004D U+0061 U+10000> to UTF-8`, () => {
-    const input = '\u{004D}\u{0061}\u{10000}';
+    const input = "\u{004D}\u{0061}\u{10000}";
 
     // prettier-ignore
     const expected = new Uint8Array([
@@ -47,7 +48,7 @@ describe(`utf8Encode`, () => {
   });
 
   it(`encodes <U+1F4A9 U+1F382> to UTF-8 (without a BOM)`, () => {
-    const input = '💩🎂';
+    const input = "💩🎂";
 
     // prettier-ignore
     const expected = new Uint8Array([
@@ -61,7 +62,7 @@ describe(`utf8Encode`, () => {
   });
 
   it(`encodes "Дмитрий Козлюк (Dmitry Kozlyuk)" to UTF-8`, () => {
-    const input = 'Дмитрий Козлюк (Dmitry Kozlyuk)';
+    const input = "Дмитрий Козлюк (Dmitry Kozlyuk)";
 
     // prettier-ignore
     const expected = new Uint8Array([
@@ -77,7 +78,7 @@ describe(`utf8Encode`, () => {
   });
 
   it(`encodes "ä☺𠜎️☁️" to UTF-8 (without a BOM)`, () => {
-    const input = 'ä☺𠜎️☁️';
+    const input = "ä☺𠜎️☁️";
 
     // prettier-ignore
     const expected = new Uint8Array([
@@ -93,7 +94,7 @@ describe(`utf8Encode`, () => {
 
 describe(`utf16Encode`, () => {
   it(`encodes <U+004D U+0430 U+4E8C U+10302> to UTF-16`, () => {
-    const input = '\u{004D}\u{0430}\u{4E8C}\u{10302}';
+    const input = "\u{004D}\u{0430}\u{4E8C}\u{10302}";
 
     // prettier-ignore
     const expected = new Uint16Array(new Uint8Array([
@@ -109,7 +110,7 @@ describe(`utf16Encode`, () => {
   });
 
   it(`encodes <U+004D U+0061 U+10000> to UTF-16`, () => {
-    const input = '\u{004D}\u{0061}\u{10000}';
+    const input = "\u{004D}\u{0061}\u{10000}";
 
     // prettier-ignore
     const expected = new Uint16Array(new Uint8Array([
@@ -124,7 +125,7 @@ describe(`utf16Encode`, () => {
   });
 
   it(`encodes <U+1F4A9 U+1F382> to UTF-16 (without a BOM)`, () => {
-    const input = '💩🎂';
+    const input = "💩🎂";
 
     // prettier-ignore
     const expected = new Uint16Array(new Uint8Array([
@@ -138,7 +139,7 @@ describe(`utf16Encode`, () => {
   });
 
   it(`encodes "Дмитрий Козлюк (Dmitry Kozlyuk)" to UTF-16`, () => {
-    const input = 'Дмитрий Козлюк (Dmitry Kozlyuk)';
+    const input = "Дмитрий Козлюк (Dmitry Kozlyuk)";
 
     // prettier-ignore
     const expected = new Uint16Array([
@@ -153,7 +154,7 @@ describe(`utf16Encode`, () => {
   });
 
   it(`encodes "ä☺𠜎️☁️" to UTF-16 (without a BOM)`, () => {
-    const input = 'ä☺𠜎️☁️';
+    const input = "ä☺𠜎️☁️";
 
     // prettier-ignore
     const expected = new Uint16Array([
@@ -176,7 +177,7 @@ describe(`utf16Decode`, () => {
       /* U+10302 */ 0xd8, 0x00, 0xdf, 0x02,
     ]);
 
-    const expected = '\u{004D}\u{0430}\u{4E8C}\u{10302}';
+    const expected = "\u{004D}\u{0430}\u{4E8C}\u{10302}";
 
     const actual = utf16Decode(input, false);
 
@@ -191,7 +192,7 @@ describe(`utf16Decode`, () => {
       /* U+10000 */ 0xd8, 0x00, 0xdc, 0x00,
     ]);
 
-    const expected = '\u{004D}\u{0061}\u{10000}';
+    const expected = "\u{004D}\u{0061}\u{10000}";
 
     const actual = utf16Decode(input, false);
 
@@ -205,7 +206,7 @@ describe(`utf16Decode`, () => {
       /* U+1F382 */ 0xd8, 0x3c, 0xdf, 0x82, 
     ]);
 
-    const expected = '💩🎂';
+    const expected = "💩🎂";
 
     const actual = utf16Decode(input, false);
 
@@ -221,7 +222,7 @@ describe(`utf16Decode`, () => {
       /* d */ 0, 100,
     ]);
 
-    const expected = 'abcd';
+    const expected = "abcd";
 
     const actual = utf16Decode(input, false);
 
@@ -240,7 +241,7 @@ describe(`utf16Decode`, () => {
       0x29,
     ]).buffer);
 
-    const expected = 'Дмитрий Козлюк (Dmitry Kozlyuk)';
+    const expected = "Дмитрий Козлюк (Dmitry Kozlyuk)";
 
     const actual = utf16Decode(input, true);
 
@@ -256,7 +257,7 @@ describe(`utf16Decode`, () => {
       0xe4, 0x263a, 55361, 57102, 0xfe0f, 0x2601, 0xfe0f,
     ]).buffer);
 
-    const expected = 'ä☺𠜎️☁️';
+    const expected = "ä☺𠜎️☁️";
 
     const actual = utf16Decode(input, true);
 
@@ -270,7 +271,7 @@ describe(`utf16Decode`, () => {
       /* U+1F382 */ 0xd8, 
     ]);
 
-    const expected = '💩�';
+    const expected = "💩�";
 
     const actual = utf16Decode(input, false);
 
@@ -284,7 +285,7 @@ describe(`utf16Decode`, () => {
       /* U+1F382 */ 0xd8, 0x3c,
     ]);
 
-    const expected = '💩�';
+    const expected = "💩�";
 
     const actual = utf16Decode(input, false);
 
@@ -298,7 +299,7 @@ describe(`utf16Decode`, () => {
       /* U+1F382 */ 0xdf, 0x82,
     ]);
 
-    const expected = '💩�';
+    const expected = "💩�";
 
     const actual = utf16Decode(input, false);
 
@@ -313,7 +314,7 @@ describe(`utf16Decode`, () => {
       /* valid a */ 0, 97,
     ]);
 
-    const expected = '💩�a';
+    const expected = "💩�a";
 
     const actual = utf16Decode(input, false);
 
@@ -328,7 +329,7 @@ describe(`utf16Decode`, () => {
       /* valid a */ 0, 97,
     ]);
 
-    const expected = '💩�a';
+    const expected = "💩�a";
 
     const actual = utf16Decode(input, false);
 

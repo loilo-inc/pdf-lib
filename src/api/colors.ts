@@ -5,13 +5,13 @@ import {
   setStrokingCmykColor,
   setStrokingGrayscaleColor,
   setStrokingRgbColor,
-} from './operators';
-import { assertRange, error } from '../utils';
+} from "./operators";
+import { assertRange, error } from "../utils";
 
 export enum ColorTypes {
-  Grayscale = 'Grayscale',
-  RGB = 'RGB',
-  CMYK = 'CMYK',
+  Grayscale = "Grayscale",
+  RGB = "RGB",
+  CMYK = "CMYK",
 }
 
 export interface Grayscale {
@@ -37,14 +37,14 @@ export interface CMYK {
 export type Color = Grayscale | RGB | CMYK;
 
 export const grayscale = (gray: number): Grayscale => {
-  assertRange(gray, 'gray', 0.0, 1.0);
+  assertRange(gray, "gray", 0.0, 1.0);
   return { type: ColorTypes.Grayscale, gray };
 };
 
 export const rgb = (red: number, green: number, blue: number): RGB => {
-  assertRange(red, 'red', 0, 1);
-  assertRange(green, 'green', 0, 1);
-  assertRange(blue, 'blue', 0, 1);
+  assertRange(red, "red", 0, 1);
+  assertRange(green, "green", 0, 1);
+  assertRange(blue, "blue", 0, 1);
   return { type: ColorTypes.RGB, red, green, blue };
 };
 
@@ -54,10 +54,10 @@ export const cmyk = (
   yellow: number,
   key: number,
 ): CMYK => {
-  assertRange(cyan, 'cyan', 0, 1);
-  assertRange(magenta, 'magenta', 0, 1);
-  assertRange(yellow, 'yellow', 0, 1);
-  assertRange(key, 'key', 0, 1);
+  assertRange(cyan, "cyan", 0, 1);
+  assertRange(magenta, "magenta", 0, 1);
+  assertRange(yellow, "yellow", 0, 1);
+  assertRange(key, "key", 0, 1);
   return { type: ColorTypes.CMYK, cyan, magenta, yellow, key };
 };
 

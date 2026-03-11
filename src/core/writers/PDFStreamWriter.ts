@@ -1,16 +1,16 @@
-import PDFHeader from '../document/PDFHeader';
-import PDFTrailer from '../document/PDFTrailer';
-import PDFInvalidObject from '../objects/PDFInvalidObject';
-import PDFName from '../objects/PDFName';
-import PDFNumber from '../objects/PDFNumber';
-import PDFObject from '../objects/PDFObject';
-import PDFRef from '../objects/PDFRef';
-import PDFStream from '../objects/PDFStream';
-import PDFContext from '../PDFContext';
-import PDFCrossRefStream from '../structures/PDFCrossRefStream';
-import PDFObjectStream from '../structures/PDFObjectStream';
-import PDFWriter from './PDFWriter';
-import { last, waitForTick } from '../../utils';
+import PDFHeader from "../document/PDFHeader";
+import PDFTrailer from "../document/PDFTrailer";
+import PDFInvalidObject from "../objects/PDFInvalidObject";
+import PDFName from "../objects/PDFName";
+import PDFNumber from "../objects/PDFNumber";
+import PDFObject from "../objects/PDFObject";
+import PDFRef from "../objects/PDFRef";
+import PDFStream from "../objects/PDFStream";
+import PDFContext from "../PDFContext";
+import PDFCrossRefStream from "../structures/PDFCrossRefStream";
+import PDFObjectStream from "../structures/PDFObjectStream";
+import PDFWriter from "./PDFWriter";
+import { last, waitForTick } from "../../utils";
 
 class PDFStreamWriter extends PDFWriter {
   static forContext = (
@@ -106,7 +106,7 @@ class PDFStreamWriter extends PDFWriter {
     }
 
     const xrefStreamRef = PDFRef.of(objectNumber++);
-    xrefStream.dict.set(PDFName.of('Size'), PDFNumber.of(objectNumber));
+    xrefStream.dict.set(PDFName.of("Size"), PDFNumber.of(objectNumber));
     xrefStream.addUncompressedEntry(xrefStreamRef, size);
     const xrefOffset = size;
     size += this.computeIndirectObjectSize([xrefStreamRef, xrefStream]);

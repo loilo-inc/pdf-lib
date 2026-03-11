@@ -1,10 +1,16 @@
-import { PDFAcroTerminal, PDFContext, PDFRef, PDFArray } from '../../../src/index';
+import { describe, it, expect } from "vitest";
+import {
+  PDFAcroTerminal,
+  PDFContext,
+  PDFRef,
+  PDFArray,
+} from "../../../src/index";
 
 describe(`PDFAcroTerminal`, () => {
   it(`returns Kids when it has them`, () => {
     const context = PDFContext.create();
 
-    const kids = context.obj(['Foo', PDFRef.of(21), 9001]);
+    const kids = context.obj(["Foo", PDFRef.of(21), 9001]);
     const kidsRef = context.register(kids);
 
     const dict = context.obj({

@@ -1,8 +1,8 @@
-import PDFDocument from '../PDFDocument';
-import PDFField from './PDFField';
+import PDFDocument from "../PDFDocument";
+import PDFField from "./PDFField";
 
-import { PDFRef, PDFAcroSignature } from '../../core';
-import { assertIs } from '../../utils';
+import { PDFRef, PDFAcroSignature } from "../../core";
+import { assertIs } from "../../utils";
 
 /**
  * Represents a signature field of a [[PDFForm]].
@@ -40,8 +40,8 @@ export default class PDFSignature extends PDFField {
   ) {
     super(acroSignature, ref, doc);
 
-    assertIs(acroSignature, 'acroSignature', [
-      [PDFAcroSignature, 'PDFAcroSignature'],
+    assertIs(acroSignature, "acroSignature", [
+      [PDFAcroSignature, "PDFAcroSignature"],
     ]);
 
     this.acroField = acroSignature;

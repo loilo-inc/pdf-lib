@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
   <head>
     <meta
@@ -33,7 +33,7 @@
   </body>
 
   <script type="text/javascript">
-    startFpsTracker('animation-target');
+    startFpsTracker("animation-target");
 
     const fetchBinaryAsset = (asset) =>
       fetch(`/assets/${asset}`).then((res) => res.arrayBuffer());
@@ -42,24 +42,18 @@
       fetch(`/assets/${asset}`).then((res) => res.text());
 
     const renderInIframe = (pdfBytes) => {
-      const blob = new Blob([pdfBytes], { type: 'application/pdf' });
+      const blob = new Blob([pdfBytes], { type: "application/pdf" });
       const blobUrl = URL.createObjectURL(blob);
-      document.getElementById('iframe').src = blobUrl;
+      document.getElementById("iframe").src = blobUrl;
     };
 
     async function test() {
-      const {
-        PDFDocument,
-        PDFPage,
-        radians,
-        StandardFonts,
-        rgb,
-        degrees,
-      } = PDFLib;
+      const { PDFDocument, PDFPage, radians, StandardFonts, rgb, degrees } =
+        PDFLib;
 
       const [inputPdfBase64, minionsLaughingBytes] = await Promise.all([
-        fetchStringAsset('pdfs/normal.pdf.base64'),
-        fetchBinaryAsset('images/minions_laughing.jpg'),
+        fetchStringAsset("pdfs/normal.pdf.base64"),
+        fetchBinaryAsset("images/minions_laughing.jpg"),
       ]);
 
       const pdfDoc = await PDFDocument.load(inputPdfBase64);

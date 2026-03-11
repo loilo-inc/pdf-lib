@@ -47,14 +47,14 @@ describe(`PDFDocument`, () => {
         'Trying to parse invalid object:',
         'Invalid object ref:',
       ];
-      console.warn = jest.fn((...args) => {
+      console.warn = vi.fn((...args) => {
         const isIgnored = ignoredWarnings.find((iw) => args[0].includes(iw));
         if (!isIgnored) origConsoleWarn(...args);
       });
     });
 
     beforeEach(() => {
-      jest.clearAllMocks();
+      vi.clearAllMocks();
     });
 
     afterAll(() => {
@@ -489,7 +489,7 @@ describe(`PDFDocument`, () => {
         pdfDoc.setTitle('Unit Test');
       };
 
-      await expect(noErrorFunc()).resolves.not.toThrowError();
+      await expect(noErrorFunc()).resolves.toBeUndefined();
     });
   });
 
@@ -524,7 +524,7 @@ describe(`PDFDocument`, () => {
         expect(pdfBytes3.byteLength).not.toEqual(pdfBytes2.byteLength);
       };
 
-      await expect(noErrorFunc()).resolves.not.toThrowError();
+      await expect(noErrorFunc()).resolves.toBeUndefined();
     });
   });
 

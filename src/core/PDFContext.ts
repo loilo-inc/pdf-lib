@@ -124,6 +124,8 @@ class PDFContext {
       const type = types[idx];
       if (type === PDFNull) {
         if (result === PDFNull) return result;
+      } else if (type === "PDFStream") {
+        if (isPDFStream(result)) return result;
       } else {
         if (result instanceof type) return result;
       }

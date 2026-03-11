@@ -12,11 +12,14 @@ jobs:
     steps:
       - uses: actions/checkout@v6
       - uses: actions/setup-node@v6
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           node-version: "24"
           cache: "npm"
           registry-url: "https://npm.pkg.github.com/"
           scope: "@loilo-inc"
+      - run: npm run build
       - run: node tools/release.mjs
         env:
           GITHUB_TOKEN: ${{ github.token }}

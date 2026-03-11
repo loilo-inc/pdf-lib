@@ -1,3 +1,4 @@
+import pako from "pako";
 import { Cache } from "../../utils";
 import PDFDict from "../objects/PDFDict";
 import PDFName from "../objects/PDFName";

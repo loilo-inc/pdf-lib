@@ -1,20 +1,15 @@
 {
   "name": "@loilo-inc/pdf-lib",
-  "version": "1.17.1",
   "scripts": {
-    "release:latest": "npm run publish --tag latest && npm run pack && npm run release:tag",
-    "release:next": "npm run publish --tag next",
-    "release:prep": "npm run clean && npm run lint && npm run typecheck && npm run test && npm run build",
-    "release:tag": "TAG=\"v$(npm run --silent get:version)\" && git tag $TAG && git push origin $TAG",
-    "get:version": "node --eval 'console.log(require(`./package.json`).version)'",
     "typecheck": "tsc --noEmit --incremental false --tsBuildInfoFile null",
+    "apps:web:typecheck": "tsc -p tsconfig.apps-web.json --incremental false --tsBuildInfoFile null",
     "fmt": "prettier --write ./src ./tests ./apps",
     "test": "vitest run --config vitest.config.ts",
     "testcov": "vitest run --config vitest.config.ts --coverage",
     "build": "tsc -p tsconfig.json",
     "apps:node": "tsx apps/node/index.ts",
-    "apps:web": "http-server -c-1 .",
-    "apps:web:mac": "bash -c 'sleep 1 && open http://localhost:8080/apps/web/test1.html' & npm run apps:web"
+    "apps:web": "node apps/web/dev-server.mjs",
+    "apps:web:build": "esbuild apps/web/src/test*.ts --bundle --format=iife --platform=browser --target=es2020 --sourcemap --outdir=apps/web/dist"
   },
   "types": "dist/index.d.ts",
   "files": [
@@ -36,6 +31,7 @@
     "@types/node": "^25.4.0",
     "@types/pako": "^1.0.1",
     "@vitest/coverage-v8": "^4.0.18",
+    "express": "^5.2.1",
     "prettier": "^3.8.1",
     "typescript": "^5.9.3",
     "vitest": "^4.0.18"

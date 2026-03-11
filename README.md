@@ -32,3 +32,7 @@
 - Brent McSharry (https://github.com/mcshaz)
 - Tim Knapp (https://github.com/duffyd)
 - Ching Chang (https://github.com/ChingChang9)
+
+## License
+
+MIT

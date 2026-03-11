@@ -1,5 +1,5 @@
-import express from "express";
 import { context } from "esbuild";
+import express from "express";
 import { readdirSync } from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
@@ -22,9 +22,9 @@ if (entryPoints.length === 0) {
 const esbuildCtx = await context({
   entryPoints,
   bundle: true,
-  format: "iife",
+  format: "esm",
   platform: "browser",
-  target: "es2020",
+  target: "es2022",
   sourcemap: true,
   outdir: webDistDir,
   logLevel: "info",

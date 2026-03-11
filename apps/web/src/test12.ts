@@ -14,23 +14,21 @@ const {
 
 startFpsTracker("animation-target");
 
-const fetchBinaryAsset = (asset) =>
+const fetchBinaryAsset = (asset: string) =>
   fetch(`/assets/${asset}`).then((res) => res.arrayBuffer());
 
-const fetchStringAsset = (asset) =>
-  fetch(`/assets/${asset}`).then((res) => res.text());
-
-const renderInIframe = (pdfBytes) => {
-  const blob = new Blob([pdfBytes], {
+const renderInIframe = (pdfBytes: Uint8Array) => {
+  const normalizedBytes = new Uint8Array(pdfBytes);
+  const blob = new Blob([normalizedBytes], {
     type: "application/pdf",
   });
   const blobUrl = URL.createObjectURL(blob);
-  document.getElementById("iframe").src = blobUrl;
+  (document.getElementById("iframe") as HTMLIFrameElement).src = blobUrl;
 };
 
-const inchToPt = (inches) => Math.round(inches * 72);
+const inchToPt = (inches: number) => Math.round(inches * 72);
 
-const firstPage = async (pdfDoc) => {
+const firstPage = async (pdfDoc: any) => {
   const page = pdfDoc.addPage(PageSizes.Letter);
 
   // SVG sample paths from
@@ -80,7 +78,7 @@ const firstPage = async (pdfDoc) => {
   });
 };
 
-const secondPage = async (pdfDoc) => {
+const secondPage = async (pdfDoc: any) => {
   const page = pdfDoc.addPage(PageSizes.Letter);
 
   // quadratic bezier example
@@ -143,7 +141,7 @@ const secondPage = async (pdfDoc) => {
   });
 };
 
-const thirdPage = async (pdfDoc, assets) => {
+const thirdPage = async (pdfDoc: any, assets: any) => {
   const page = pdfDoc.addPage(PageSizes.Letter);
 
   const modeNames = values(BlendMode);
@@ -289,7 +287,7 @@ const thirdPage = async (pdfDoc, assets) => {
   });
 };
 
-async function test() {
+export async function test() {
   const [selfDrivePngBytes, simplePdf2ExampleBytes] = await Promise.all([
     fetchBinaryAsset("images/self_drive.png"),
     fetchBinaryAsset("pdfs/pdf20examples/Simple PDF 2.0 file.pdf"),
@@ -305,5 +303,3 @@ async function test() {
 
   renderInIframe(pdfBytes);
 }
-
-(window as any).test = test;

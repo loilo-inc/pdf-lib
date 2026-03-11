@@ -1,20 +1,20 @@
 {
   "name": "@loilo-inc/pdf-lib",
   "scripts": {
-    "typecheck": "tsc --noEmit --incremental false --tsBuildInfoFile null",
-    "apps:web:typecheck": "tsc -p tsconfig.apps-web.json --incremental false --tsBuildInfoFile null",
+    "tsc": "tsc --noEmit",
     "fmt": "prettier --write ./src ./tests ./apps",
+    "clean": "rm -rf dist",
     "test": "vitest run --config vitest.config.ts",
     "testcov": "vitest run --config vitest.config.ts --coverage",
     "build": "tsc -p tsconfig.json",
     "apps:node": "tsx apps/node/index.ts",
     "apps:web": "node apps/web/dev-server.mjs",
+    "apps:web:tsc": "tsc -p apps/web/tsconfig.json",
     "apps:web:build": "esbuild apps/web/src/test*.ts --bundle --format=iife --platform=browser --target=es2020 --sourcemap --outdir=apps/web/dist"
   },
   "types": "dist/index.d.ts",
   "files": [
     "dist/",
-    "src/",
     "LICENSE",
     "package.json",
     "README.md"

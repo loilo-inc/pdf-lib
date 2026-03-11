@@ -1,18 +1,20 @@
 import * as PDFLib from "../../../src/index";
+import fontkit from "@pdf-lib/fontkit";
 import { startFpsTracker } from "./utils";
 
 startFpsTracker("animation-target");
 
-const fetchBinaryAsset = (asset) =>
+const fetchBinaryAsset = (asset: string) =>
   fetch(`/assets/${asset}`).then((res) => res.arrayBuffer());
 
-const fetchStringAsset = (asset) =>
+const fetchStringAsset = (asset: string) =>
   fetch(`/assets/${asset}`).then((res) => res.text());
 
-const renderInIframe = (pdfBytes) => {
-  const blob = new Blob([pdfBytes], { type: "application/pdf" });
+const renderInIframe = (pdfBytes: ArrayBuffer | Uint8Array) => {
+  const normalizedBytes = new Uint8Array(pdfBytes);
+  const blob = new Blob([normalizedBytes], { type: "application/pdf" });
   const blobUrl = URL.createObjectURL(blob);
-  document.getElementById("iframe").src = blobUrl;
+  (document.getElementById("iframe") as HTMLIFrameElement).src = blobUrl;
 };
 
 const ipsumLines = [
@@ -23,7 +25,7 @@ const ipsumLines = [
 
 // This test creates a new PDF document and inserts pages to it.
 // Each page is testing different features of pdf-lib.
-async function test() {
+export async function test() {
   const {
     clip,
     clipEvenOdd,
@@ -732,5 +734,3 @@ async function test() {
 
   renderInIframe(pdfBytes);
 }
-
-(window as any).test = test;

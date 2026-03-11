@@ -1,18 +1,20 @@
 import * as PDFLib from "../../../src/index";
+import fontkit from "@pdf-lib/fontkit";
 import { startFpsTracker } from "./utils";
 
 startFpsTracker("animation-target");
 
-const fetchBinaryAsset = (asset) =>
+const fetchBinaryAsset = (asset: string) =>
   fetch(`/assets/${asset}`).then((res) => res.arrayBuffer());
 
-const renderInIframe = (pdfBytes) => {
-  const blob = new Blob([pdfBytes], { type: "application/pdf" });
+const renderInIframe = (pdfBytes: Uint8Array) => {
+  const normalizedBytes = new Uint8Array(pdfBytes);
+  const blob = new Blob([normalizedBytes], { type: "application/pdf" });
   const blobUrl = URL.createObjectURL(blob);
-  document.getElementById("iframe").src = blobUrl;
+  (document.getElementById("iframe") as HTMLIFrameElement).src = blobUrl;
 };
 
-async function test() {
+export async function test() {
   const {
     PDFDocument,
     StandardFonts,
@@ -20,7 +22,6 @@ async function test() {
     rgb,
     degrees,
     drawText,
-    PDFFont,
     drawEllipse,
     PDFWidgetAnnotation,
   } = PDFLib;
@@ -162,7 +163,7 @@ async function test() {
   const text = symbol.encodeText("ℑ");
   const textW = symbol.widthOfTextAtSize("ℑ", 35);
   const textH = symbol.heightAtSize(35);
-  const symbolText = (font) =>
+  const symbolText = (font: any) =>
     drawText(text, {
       x: width / 2 - textW / 2,
       y: height / 2 - textH / 2 + 10,
@@ -174,7 +175,7 @@ async function test() {
       ySkew: degrees(0),
     });
 
-  const assert = (condition, msg = "") => {
+  const assert = (condition: boolean, msg = "") => {
     if (!condition) throw new Error(msg || "Assertion failed");
   };
 
@@ -219,5 +220,3 @@ async function test() {
 
   renderInIframe(pdfBytes);
 }
-
-(window as any).test = test;

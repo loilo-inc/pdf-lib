@@ -4,7 +4,7 @@
     <meta
       http-equiv="Content-Security-Policy"
       content="
-        default-src 'self' 'unsafe-inline' blob: resource: https://unpkg.com/@pdf-lib/fontkit/dist/fontkit.umd.js;
+        default-src 'self' 'unsafe-inline' blob: resource:;
         object-src 'self' blob:;
         frame-src 'self' blob:;
       "
@@ -21,7 +21,7 @@
       <button onclick="window.location.href = '/apps/web/test11.html'">
         Prev
       </button>
-      <button onclick="test()">Run Test</button>
+      <button id="run-test-btn">Run Test</button>
       <button onclick="window.location.href = '/apps/web/test13.html'">
         Next
       </button>
@@ -29,5 +29,11 @@
     <div id="animation-target"></div>
     <iframe id="iframe"></iframe>
   </body>
-  <script type="module" src="/apps/web/dist/test12.js"></script>
+  <script type="module">
+    import { test } from "/apps/web/dist/test12.js";
+
+    document.getElementById("run-test-btn")?.addEventListener("click", () => {
+      void test();
+    });
+  </script>
 </html>

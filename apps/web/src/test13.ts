@@ -3,13 +3,14 @@ import { startFpsTracker } from "./utils";
 
 startFpsTracker("animation-target");
 
-const fetchBinaryAsset = (asset) =>
+const fetchBinaryAsset = (asset: string) =>
   fetch(`/assets/${asset}`).then((res) => res.arrayBuffer());
 
-const renderInIframe = (pdfBytes) => {
-  const blob = new Blob([pdfBytes], { type: "application/pdf" });
+const renderInIframe = (pdfBytes: Uint8Array) => {
+  const normalizedBytes = new Uint8Array(pdfBytes);
+  const blob = new Blob([normalizedBytes], { type: "application/pdf" });
   const blobUrl = URL.createObjectURL(blob);
-  document.getElementById("iframe").src = blobUrl;
+  (document.getElementById("iframe") as HTMLIFrameElement).src = blobUrl;
 };
 
 // prettier-ignore
@@ -57,7 +58,7 @@ const pngSuite = [
       'z06n2c08.png', 'z09n2c08.png',
     ];
 
-async function test() {
+export async function test() {
   const { PDFDocument, rgb } = PDFLib;
 
   const pdfDoc = await PDFDocument.create();
@@ -103,5 +104,3 @@ async function test() {
 
   renderInIframe(pdfBytes);
 }
-
-(window as any).test = test;

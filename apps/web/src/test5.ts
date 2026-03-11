@@ -3,18 +3,19 @@ import { startFpsTracker } from "./utils";
 
 startFpsTracker("animation-target");
 
-const fetchAsset = (asset) =>
+const fetchAsset = (asset: string) =>
   fetch(`/assets/${asset}`)
     .then((res) => res.arrayBuffer())
     .then((res) => new Uint8Array(res));
 
-const renderInIframe = (pdfBytes) => {
-  const blob = new Blob([pdfBytes], { type: "application/pdf" });
+const renderInIframe = (pdfBytes: Uint8Array) => {
+  const normalizedBytes = new Uint8Array(pdfBytes);
+  const blob = new Blob([normalizedBytes], { type: "application/pdf" });
   const blobUrl = URL.createObjectURL(blob);
-  document.getElementById("iframe").src = blobUrl;
+  (document.getElementById("iframe") as HTMLIFrameElement).src = blobUrl;
 };
 
-async function test() {
+export async function test() {
   const { PDFDocument, rgb, StandardFonts } = PDFLib;
 
   const [inputPdfBytes, minionsBananaAlphaBytes] = await Promise.all([
@@ -66,5 +67,3 @@ async function test() {
 
   renderInIframe(pdfBytes);
 }
-
-(window as any).test = test;

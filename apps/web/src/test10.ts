@@ -3,15 +3,11 @@ import { startFpsTracker } from "./utils";
 
 startFpsTracker("animation-target");
 
-const fetchAsset = (asset) =>
-  fetch(`/assets/${asset}`)
-    .then((res) => res.arrayBuffer())
-    .then((res) => new Uint8Array(res));
-
-const renderInIframe = (pdfBytes) => {
-  const blob = new Blob([pdfBytes], { type: "application/pdf" });
+const renderInIframe = (pdfBytes: Uint8Array) => {
+  const normalizedBytes = new Uint8Array(pdfBytes);
+  const blob = new Blob([normalizedBytes], { type: "application/pdf" });
   const blobUrl = URL.createObjectURL(blob);
-  document.getElementById("iframe").src = blobUrl;
+  (document.getElementById("iframe") as HTMLIFrameElement).src = blobUrl;
 };
 
 // prettier-ignore
@@ -108,11 +104,17 @@ const symbolString = String.fromCodePoint(...symbolCodePoints)
   .split("")
   .join(" ");
 
-const addPageWithFonts = (pdfDoc, text, fontSize, gapAmt, fontNames) => {
+const addPageWithFonts = (
+  pdfDoc: any,
+  text: string,
+  fontSize: number,
+  gapAmt: number,
+  fontNames: string[],
+) => {
   const page = pdfDoc.addPage([650, 700]);
 
   page.moveTo(0, 675);
-  fontNames.forEach((fontName) => {
+  fontNames.forEach((fontName: string) => {
     const font = pdfDoc.embedStandardFont(fontName);
     const lines = breakTextIntoLines(text, fontSize, font, 600);
 
@@ -136,8 +138,13 @@ const addPageWithFonts = (pdfDoc, text, fontSize, gapAmt, fontNames) => {
 };
 
 // Primitive line break algorithm
-const breakTextIntoLines = (text, size, font, maxWidth) => {
-  const lines = [];
+const breakTextIntoLines = (
+  text: string,
+  size: number,
+  font: any,
+  maxWidth: number,
+) => {
+  const lines: string[] = [];
   let textIdx = 0;
   while (textIdx < text.length) {
     let line = "";
@@ -158,7 +165,7 @@ const breakTextIntoLines = (text, size, font, maxWidth) => {
   return lines;
 };
 
-async function test() {
+export async function test() {
   const { PDFDocument, StandardFonts } = PDFLib;
 
   const pdfDoc = await PDFDocument.create();
@@ -297,5 +304,3 @@ async function test() {
 
   renderInIframe(pdfBytes);
 }
-
-(window as any).test = test;

@@ -1,21 +1,23 @@
 import * as PDFLib from "../../../src/index";
+import fontkit from "@pdf-lib/fontkit";
 import { startFpsTracker } from "./utils";
 
 const { PDFDocument } = PDFLib;
 
 startFpsTracker("animation-target");
 
-const fetchBinaryAsset = (asset) =>
+const fetchBinaryAsset = (asset: string) =>
   fetch(`/assets/${asset}`).then((res) => res.arrayBuffer());
 
-const renderInIframe = (pdfBytes) => {
-  const blob = new Blob([pdfBytes], { type: "application/pdf" });
+const renderInIframe = (pdfBytes: Uint8Array) => {
+  const normalizedBytes = new Uint8Array(pdfBytes);
+  const blob = new Blob([normalizedBytes], { type: "application/pdf" });
   const blobUrl = URL.createObjectURL(blob);
-  document.getElementById("iframe").src = blobUrl;
+  (document.getElementById("iframe") as HTMLIFrameElement).src = blobUrl;
 };
 
 // Based on test14.ts
-const loadA = async (assets) => {
+const loadA = async (assets: any) => {
   const pdfDoc = await PDFDocument.load(assets.combedPdf);
   const form = pdfDoc.getForm();
 
@@ -72,7 +74,7 @@ const loadA = async (assets) => {
 };
 
 // Based on test15.ts
-const loadB = async (assets) => {
+const loadB = async (assets: any) => {
   const pdfDoc = await PDFDocument.load(assets.dodCharacterPdf);
   const form = pdfDoc.getForm();
 
@@ -93,7 +95,7 @@ const loadB = async (assets) => {
 };
 
 // Based on test16.ts
-const loadC = async (assets) => {
+const loadC = async (assets: any) => {
   const pdfDoc = await PDFDocument.load(assets.xfaFieldsPdf);
   const form = pdfDoc.getForm();
 
@@ -136,7 +138,7 @@ const loadC = async (assets) => {
 };
 
 // Based on test17.ts
-const loadD = async (assets) => {
+const loadD = async (assets: any) => {
   const pdfDoc = await PDFDocument.load(assets.fancyFieldsPdf);
 
   pdfDoc.registerFontkit(fontkit);
@@ -170,7 +172,7 @@ const loadD = async (assets) => {
 };
 
 // Based on https://github.com/Hopding/pdf-lib#create-form
-const loadE = async (_assets) => {
+const loadE = async (_assets: any) => {
   const pdfDoc = await PDFDocument.create();
 
   const page = pdfDoc.addPage([550, 750]);
@@ -237,7 +239,7 @@ const loadE = async (_assets) => {
   return pdfDoc;
 };
 
-async function test() {
+export async function test() {
   const [
     formToFlattenPdf,
     dodCharacterPdf,
@@ -308,5 +310,3 @@ async function test() {
 
   renderInIframe(pdfBytes);
 }
-
-(window as any).test = test;

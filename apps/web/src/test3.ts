@@ -3,17 +3,17 @@ import { startFpsTracker } from "./utils";
 
 startFpsTracker("animation-target");
 
-const fetchBinaryAsset = (asset) =>
+const fetchBinaryAsset = (asset: string) =>
   fetch(`/assets/${asset}`).then((res) => res.arrayBuffer());
 
-const fetchStringAsset = (asset) =>
+const fetchStringAsset = (asset: string) =>
   fetch(`/assets/${asset}`).then((res) => res.text());
 
-const renderInIframe = (pdfDataUri) => {
-  document.getElementById("iframe").src = pdfDataUri;
+const renderInIframe = (pdfDataUri: string) => {
+  (document.getElementById("iframe") as HTMLIFrameElement).src = pdfDataUri;
 };
 
-async function test() {
+export async function test() {
   const { degrees, PDFDocument, rgb, StandardFonts, LineCapStyle } = PDFLib;
 
   const [
@@ -140,5 +140,3 @@ async function test() {
 
   renderInIframe(base64PdfDataUri);
 }
-
-(window as any).test = test;

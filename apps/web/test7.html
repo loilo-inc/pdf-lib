@@ -21,7 +21,7 @@
       <button onclick="window.location.href = '/apps/web/test6.html'">
         Prev
       </button>
-      <button onclick="test()">Run Test</button>
+      <button id="run-test-btn">Run Test</button>
       <button onclick="window.location.href = '/apps/web/test8.html'">
         Next
       </button>
@@ -30,5 +30,11 @@
     <div id="result-stats" style="max-width: 1000px; text-align: center"></div>
     <iframe id="iframe"></iframe>
   </body>
-  <script type="module" src="/apps/web/dist/test7.js"></script>
+  <script type="module">
+    import { test } from "/apps/web/dist/test7.js";
+
+    document.getElementById("run-test-btn")?.addEventListener("click", () => {
+      void test();
+    });
+  </script>
 </html>

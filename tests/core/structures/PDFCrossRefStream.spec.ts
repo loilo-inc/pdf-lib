@@ -29,15 +29,15 @@ describe(`PDFCrossRefStream`, () => {
   stream2.addUncompressedEntry(PDFRef.of(9000), 600);
   stream2.addCompressedEntry(PDFRef.of(9001), PDFRef.of(10), 1);
 
-  it(`can be cloned`, () => {
+  it(`can be cloned`, async () => {
     const original = stream1;
     const clone = original.clone();
     expect(clone).not.toBe(original);
-    expect(String(clone)).toBe(String(original));
+    expect(await clone.toString()).toBe(await original.toString());
   });
 
-  it(`can be converted to a string`, () => {
-    expect(String(stream1)).toEqual(
+  it(`can be converted to a string`, async () => {
+    expect(await stream1.toString()).toEqual(
       "<<\n/Type /XRef\n/Length 16\n/W [ 1 1 2 ]\n/Index [ 0 3 21 1 ]\n>>\n" +
         "stream\n" +
         "001111111111111111010110101111100101000101011010110011" +
@@ -45,8 +45,8 @@ describe(`PDFCrossRefStream`, () => {
     );
   });
 
-  it(`can be converted to a string without object number 1`, () => {
-    expect(String(stream2)).toEqual(
+  it(`can be converted to a string without object number 1`, async () => {
+    expect(await stream2.toString()).toEqual(
       "<<\n/Type /XRef\n/Length 25\n/W [ 1 2 2 ]\n/Index [ 0 1 2 2 9000 2 ]\n>>\n" +
         "stream\n" +
         "00011111111111111111110110000100101000110101100000100101001" +
@@ -54,18 +54,17 @@ describe(`PDFCrossRefStream`, () => {
     );
   });
 
-  it(`can provide its size in bytes`, () => {
-    expect(stream1.sizeInBytes()).toBe(95);
+  it(`can provide its size in bytes`, async () => {
+    expect(await stream1.sizeInBytes()).toBe(95);
   });
 
-  it(`can provide its size in bytes without object number 1`, () => {
-    expect(stream2.sizeInBytes()).toBe(110);
+  it(`can provide its size in bytes without object number 1`, async () => {
+    expect(await stream2.sizeInBytes()).toBe(110);
   });
 
-  it(`can be serialized`, () => {
-    const buffer = new Uint8Array(stream1.sizeInBytes() + 3).fill(
-      toCharCode(" "),
-    );
+  it(`can be serialized`, async () => {
+    const size = await stream1.sizeInBytes();
+    const buffer = new Uint8Array(size + 3).fill(toCharCode(" "));
 
     // prettier-ignore
     const expectedEntries = new Uint8Array([
@@ -75,7 +74,7 @@ describe(`PDFCrossRefStream`, () => {
       2,  5,   2, 179,
     ]);
 
-    expect(stream1.copyBytesInto(buffer, 2)).toBe(95);
+    expect(await stream1.copyBytesInto(buffer, 2)).toBe(95);
     expect(buffer).toEqual(
       mergeIntoTypedArray(
         "  <<\n/Type /XRef\n/Length 16\n/W [ 1 1 2 ]\n/Index [ 0 3 21 1 ]\n>>\n",
@@ -86,10 +85,9 @@ describe(`PDFCrossRefStream`, () => {
     );
   });
 
-  it(`can be serialized without object number 1`, () => {
-    const buffer = new Uint8Array(stream2.sizeInBytes() + 3).fill(
-      toCharCode(" "),
-    );
+  it(`can be serialized without object number 1`, async () => {
+    const size = await stream2.sizeInBytes();
+    const buffer = new Uint8Array(size + 3).fill(toCharCode(" "));
 
     // prettier-ignore
     const expectedEntries = new Uint8Array([
@@ -100,7 +98,7 @@ describe(`PDFCrossRefStream`, () => {
       2,  0,  10,    0,    1,
     ]);
 
-    expect(stream2.copyBytesInto(buffer, 2)).toBe(110);
+    expect(await stream2.copyBytesInto(buffer, 2)).toBe(110);
     expect(buffer).toEqual(
       mergeIntoTypedArray(
         "  <<\n/Type /XRef\n/Length 25\n/W [ 1 2 2 ]\n/Index [ 0 1 2 2 9000 2 ]\n>>\n",
@@ -117,10 +115,8 @@ describe(`PDFCrossRefStream`, () => {
     stream.addCompressedEntry(PDFRef.of(3), PDFRef.of(10), 0);
     stream.addUncompressedEntry(PDFRef.of(9000), 600);
     stream.addCompressedEntry(PDFRef.of(9001), PDFRef.of(10), 1);
-
-    const buffer = new Uint8Array(stream.sizeInBytes() + 3).fill(
-      toCharCode(" "),
-    );
+    const size = await stream.sizeInBytes();
+    const buffer = new Uint8Array(size + 3).fill(toCharCode(" "));
 
     // prettier-ignore
     const expectedEntries = new Uint8Array([
@@ -132,7 +128,7 @@ describe(`PDFCrossRefStream`, () => {
     ]);
     const encodedEntries = await deflateAsync(expectedEntries);
 
-    expect(stream.copyBytesInto(buffer, 2)).toBe(135);
+    expect(await stream.copyBytesInto(buffer, 2)).toBe(135);
     expect(buffer).toEqual(
       mergeIntoTypedArray(
         "  <<\n/Type /XRef\n/Length 29\n/W [ 1 2 2 ]\n/Index [ 0 1 2 2 9000 2 ]\n/Filter /FlateDecode\n>>\n",

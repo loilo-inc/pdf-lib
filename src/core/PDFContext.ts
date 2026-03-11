@@ -13,7 +13,7 @@ import PDFNumber from "./objects/PDFNumber";
 import PDFObject, { PDFAsyncObject } from "./objects/PDFObject";
 import PDFRawStream from "./objects/PDFRawStream";
 import PDFRef from "./objects/PDFRef";
-import PDFStream from "./objects/PDFStream";
+import { isPDFStream, PDFStream } from "./objects/PDFStream";
 import PDFString from "./objects/PDFString";
 import PDFOperator from "./operators/PDFOperator";
 import Ops from "./operators/PDFOperatorNames";
@@ -102,7 +102,7 @@ class PDFContext {
   lookupMaybe(ref: LookupKey, type: typeof PDFName): PDFName | undefined;
   lookupMaybe(ref: LookupKey, type: typeof PDFNull): typeof PDFNull | undefined;
   lookupMaybe(ref: LookupKey, type: typeof PDFNumber): PDFNumber | undefined;
-  lookupMaybe(ref: LookupKey, type: typeof PDFStream): PDFStream | undefined;
+  lookupMaybe(ref: LookupKey, type: "PDFStream"): PDFStream | undefined;
   lookupMaybe(ref: LookupKey, type: typeof PDFRef): PDFRef | undefined;
   lookupMaybe(ref: LookupKey, type: typeof PDFString): PDFString | undefined;
   lookupMaybe(
@@ -139,7 +139,7 @@ class PDFContext {
   lookup(ref: LookupKey, type: typeof PDFName): PDFName;
   lookup(ref: LookupKey, type: typeof PDFNull): typeof PDFNull;
   lookup(ref: LookupKey, type: typeof PDFNumber): PDFNumber;
-  lookup(ref: LookupKey, type: typeof PDFStream): PDFStream;
+  lookup(ref: LookupKey, type: "PDFStream"): PDFStream;
   lookup(ref: LookupKey, type: typeof PDFRef): PDFRef;
   lookup(ref: LookupKey, type: typeof PDFString): PDFString;
   lookup(
@@ -157,6 +157,8 @@ class PDFContext {
       const type = types[idx];
       if (type === PDFNull) {
         if (result === PDFNull) return result;
+      } else if (type === "PDFStream") {
+        if (isPDFStream(result)) return result;
       } else {
         if (result instanceof type) return result;
       }

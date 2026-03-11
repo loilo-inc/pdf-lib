@@ -8,7 +8,6 @@ import PDFArray from "../objects/PDFArray";
 import PDFNumber from "../objects/PDFNumber";
 import PDFRawStream from "../objects/PDFRawStream";
 import PDFRef from "../objects/PDFRef";
-import PDFStream from "../objects/PDFStream";
 import PDFContext from "../PDFContext";
 import { decodePDFRawStream } from "../streams/decode";
 import PDFContentStream from "../structures/PDFContentStream";
@@ -120,7 +119,7 @@ class PDFPageEmbedder {
     const decodedContents: Uint8Array[] = [];
 
     for (let idx = 0, len = contents.size(); idx < len; idx++) {
-      const stream = contents.lookup(idx, PDFStream);
+      const stream = contents.lookup(idx, "PDFStream");
 
       let content: Uint8Array;
       if (stream instanceof PDFRawStream) {

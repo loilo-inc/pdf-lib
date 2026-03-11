@@ -3,7 +3,7 @@ import PDFDict from "./objects/PDFDict";
 import PDFName from "./objects/PDFName";
 import PDFObject, { PDFAsyncObject } from "./objects/PDFObject";
 import PDFRef from "./objects/PDFRef";
-import PDFStream from "./objects/PDFStream";
+import { PDFStream, isPDFStream } from "./objects/PDFStream";
 import PDFContext from "./PDFContext";
 import PDFPageLeaf from "./structures/PDFPageLeaf";
 
@@ -49,7 +49,7 @@ class PDFObjectCopier {
       object instanceof PDFPageLeaf ? this.copyPDFPage(object)
     : object instanceof PDFDict     ? this.copyPDFDict(object)
     : object instanceof PDFArray    ? this.copyPDFArray(object)
-    : object instanceof PDFStream   ? this.copyPDFStream(object)
+    : isPDFStream(object)  ? this.copyPDFStream(object)
     : object instanceof PDFRef      ? this.copyPDFIndirectObject(object)
     : object.clone()
   ) as T;

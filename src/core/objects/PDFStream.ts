@@ -3,17 +3,22 @@ import CharCodes from "../syntax/CharCodes";
 import PDFDict from "./PDFDict";
 import PDFName from "./PDFName";
 import PDFNumber from "./PDFNumber";
-import { PDFAsyncObject } from "./PDFObject";
+import PDFObject, { PDFAsyncObject } from "./PDFObject";
 
-abstract class PDFStream extends PDFAsyncObject {
+export type PDFStream = PDFAsyncStream | PDFSyncStream;
+export function isPDFStream(unknown: unknown): unknown is PDFStream {
+  return unknown instanceof PDFAsyncStream || unknown instanceof PDFSyncStream;
+}
+
+export abstract class PDFAsyncStream extends PDFAsyncObject {
   readonly dict: PDFDict;
 
-  constructor(dict: PDFDict) {
+  protected constructor(dict: PDFDict) {
     super();
     this.dict = dict;
   }
 
-  clone(_context?: PDFContext): PDFStream {
+  clone(_context?: PDFContext): PDFAsyncStream {
     throw new Error("Method not implemented.");
   }
 
@@ -47,7 +52,7 @@ abstract class PDFStream extends PDFAsyncObject {
     await this.updateDict();
     const initialOffset = offset;
 
-    offset += await this.dict.copyBytesInto(buffer, offset);
+    offset += this.dict.copyBytesInto(buffer, offset);
     buffer[offset++] = CharCodes.Newline;
 
     buffer[offset++] = CharCodes.s;
@@ -78,4 +83,75 @@ abstract class PDFStream extends PDFAsyncObject {
   }
 }
 
-export default PDFStream;
+export abstract class PDFSyncStream extends PDFObject {
+  readonly dict: PDFDict;
+
+  constructor(dict: PDFDict) {
+    super();
+    this.dict = dict;
+  }
+
+  clone(_context?: PDFContext): PDFSyncStream {
+    throw new Error("Method not implemented.");
+  }
+
+  abstract getContentsString(): string;
+
+  abstract getContents(): Uint8Array;
+
+  abstract getContentsSize(): number;
+
+  updateDict(): void {
+    const contentsSize = this.getContentsSize();
+    this.dict.set(PDFName.Length, PDFNumber.of(contentsSize));
+  }
+
+  sizeInBytes(): number {
+    this.updateDict();
+    const contentsSize = this.getContentsSize();
+    return this.dict.sizeInBytes() + contentsSize + 18;
+  }
+
+  toString(): string {
+    this.updateDict();
+    let streamString = this.dict.toString();
+    streamString += "\nstream\n";
+    streamString += this.getContentsString();
+    streamString += "\nendstream";
+    return streamString;
+  }
+
+  copyBytesInto(buffer: Uint8Array, offset: number): number {
+    this.updateDict();
+    const initialOffset = offset;
+
+    offset += this.dict.copyBytesInto(buffer, offset);
+    buffer[offset++] = CharCodes.Newline;
+
+    buffer[offset++] = CharCodes.s;
+    buffer[offset++] = CharCodes.t;
+    buffer[offset++] = CharCodes.r;
+    buffer[offset++] = CharCodes.e;
+    buffer[offset++] = CharCodes.a;
+    buffer[offset++] = CharCodes.m;
+    buffer[offset++] = CharCodes.Newline;
+
+    const contents = this.getContents();
+    for (let idx = 0, len = contents.length; idx < len; idx++) {
+      buffer[offset++] = contents[idx];
+    }
+
+    buffer[offset++] = CharCodes.Newline;
+    buffer[offset++] = CharCodes.e;
+    buffer[offset++] = CharCodes.n;
+    buffer[offset++] = CharCodes.d;
+    buffer[offset++] = CharCodes.s;
+    buffer[offset++] = CharCodes.t;
+    buffer[offset++] = CharCodes.r;
+    buffer[offset++] = CharCodes.e;
+    buffer[offset++] = CharCodes.a;
+    buffer[offset++] = CharCodes.m;
+
+    return offset - initialOffset;
+  }
+}

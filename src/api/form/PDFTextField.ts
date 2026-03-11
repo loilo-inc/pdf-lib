@@ -1,33 +1,33 @@
 import PDFDocument from "../PDFDocument";
-import PDFPage from "../PDFPage";
 import PDFFont from "../PDFFont";
 import PDFImage from "../PDFImage";
+import PDFPage from "../PDFPage";
+import { rgb } from "../colors";
+import {
+  ExceededMaxLengthError,
+  InvalidMaxLengthError,
+  RichTextFieldReadError,
+} from "../errors";
+import { ImageAlignment } from "../image/alignment";
+import { degrees } from "../rotations";
+import { TextAlignment } from "../text/alignment";
 import PDFField, {
   FieldAppearanceOptions,
   assertFieldAppearanceOptions,
 } from "./PDFField";
 import {
   AppearanceProviderFor,
-  normalizeAppearance,
   defaultTextFieldAppearanceProvider,
+  normalizeAppearance,
 } from "./appearances";
-import { rgb } from "../colors";
-import { degrees } from "../rotations";
-import {
-  RichTextFieldReadError,
-  ExceededMaxLengthError,
-  InvalidMaxLengthError,
-} from "../errors";
-import { ImageAlignment } from "../image/alignment";
-import { TextAlignment } from "../text/alignment";
 
 import {
+  AcroTextFlags,
+  PDFAcroText,
   PDFHexString,
   PDFRef,
-  PDFStream,
-  PDFAcroText,
-  AcroTextFlags,
   PDFWidgetAnnotation,
+  isPDFStream,
 } from "../../core";
 import {
   assertIs,
@@ -297,7 +297,7 @@ export default class PDFTextField extends PDFField {
     const fieldAlignment = this.getAlignment();
 
     // prettier-ignore
-    const alignment = 
+    const alignment =
         fieldAlignment === TextAlignment.Center ? ImageAlignment.Center
       : fieldAlignment === TextAlignment.Right ? ImageAlignment.Right
       : ImageAlignment.Left;
@@ -760,8 +760,7 @@ export default class PDFTextField extends PDFField {
     const widgets = this.acroField.getWidgets();
     for (let idx = 0, len = widgets.length; idx < len; idx++) {
       const widget = widgets[idx];
-      const hasAppearances =
-        widget.getAppearances()?.normal instanceof PDFStream;
+      const hasAppearances = isPDFStream(widget.getAppearances()?.normal);
       if (!hasAppearances) return true;
     }
 

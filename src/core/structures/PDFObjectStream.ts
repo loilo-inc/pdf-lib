@@ -31,6 +31,8 @@ class PDFObjectStream extends PDFFlateStream {
     this.objects = objects;
     this.offsets = new AsyncCache(this.computeObjectOffsets);
     this.offsetsString = new AsyncCache(this.computeOffsetsString);
+    this.dict.set(PDFName.of("Type"), PDFName.of("ObjStm"));
+    this.dict.set(PDFName.of("N"), PDFNumber.of(this.objects.length));
   }
 
   getObjectsCount(): number {
@@ -39,8 +41,6 @@ class PDFObjectStream extends PDFFlateStream {
 
   async updateDict(): Promise<void> {
     await super.updateDict();
-    this.dict.set(PDFName.of("Type"), PDFName.of("ObjStm"));
-    this.dict.set(PDFName.of("N"), PDFNumber.of(this.objects.length));
     const offsetsString = await this.offsetsString.access();
     this.dict.set(PDFName.of("First"), PDFNumber.of(offsetsString.length));
   }

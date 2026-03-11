@@ -1,26 +1,26 @@
 import PDFDocument from "../PDFDocument";
-import PDFPage from "../PDFPage";
 import PDFFont from "../PDFFont";
+import PDFPage from "../PDFPage";
+import { rgb } from "../colors";
+import { degrees } from "../rotations";
 import PDFField, {
   FieldAppearanceOptions,
   assertFieldAppearanceOptions,
 } from "./PDFField";
 import {
   AppearanceProviderFor,
-  normalizeAppearance,
   defaultOptionListAppearanceProvider,
+  normalizeAppearance,
 } from "./appearances";
-import { rgb } from "../colors";
-import { degrees } from "../rotations";
 
 import {
-  PDFRef,
-  PDFHexString,
-  PDFString,
-  PDFStream,
-  PDFAcroListBox,
   AcroChoiceFlags,
+  PDFAcroListBox,
+  PDFHexString,
+  PDFRef,
+  PDFString,
   PDFWidgetAnnotation,
+  isPDFStream,
 } from "../../core";
 import {
   assertIs,
@@ -498,8 +498,7 @@ export default class PDFOptionList extends PDFField {
     const widgets = this.acroField.getWidgets();
     for (let idx = 0, len = widgets.length; idx < len; idx++) {
       const widget = widgets[idx];
-      const hasAppearances =
-        widget.getAppearances()?.normal instanceof PDFStream;
+      const hasAppearances = isPDFStream(widget.getAppearances()?.normal);
       if (!hasAppearances) return true;
     }
 

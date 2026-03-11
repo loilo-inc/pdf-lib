@@ -1,3 +1,6 @@
+import { PDFArrayIsNotRectangleError } from "../errors";
+import PDFContext from "../PDFContext";
+import CharCodes from "../syntax/CharCodes";
 import PDFBool from "./PDFBool";
 import PDFDict from "./PDFDict";
 import PDFHexString from "./PDFHexString";
@@ -5,13 +8,10 @@ import PDFName from "./PDFName";
 import PDFNull from "./PDFNull";
 import PDFNumber from "./PDFNumber";
 import PDFObject from "./PDFObject";
-import PDFRef from "./PDFRef";
-import PDFStream from "./PDFStream";
-import PDFString from "./PDFString";
-import PDFContext from "../PDFContext";
-import CharCodes from "../syntax/CharCodes";
-import { PDFArrayIsNotRectangleError } from "../errors";
 import PDFRawStream from "./PDFRawStream";
+import PDFRef from "./PDFRef";
+import { PDFStream } from "./PDFStream";
+import PDFString from "./PDFString";
 
 class PDFArray extends PDFObject {
   static withContext = (context: PDFContext) => new PDFArray(context);
@@ -64,7 +64,7 @@ class PDFArray extends PDFObject {
   lookupMaybe(index: number, type: typeof PDFName): PDFName | undefined;
   lookupMaybe(index: number, type: typeof PDFNull): typeof PDFNull | undefined;
   lookupMaybe(index: number, type: typeof PDFNumber): PDFNumber | undefined;
-  lookupMaybe(index: number, type: typeof PDFStream): PDFStream | undefined;
+  lookupMaybe(index: number, type: "PDFStream"): PDFStream | undefined;
   lookupMaybe(
     index: number,
     type: typeof PDFRawStream,
@@ -93,7 +93,7 @@ class PDFArray extends PDFObject {
   lookup(index: number, type: typeof PDFName): PDFName;
   lookup(index: number, type: typeof PDFNull): typeof PDFNull;
   lookup(index: number, type: typeof PDFNumber): PDFNumber;
-  lookup(index: number, type: typeof PDFStream): PDFStream;
+  lookup(index: number, type: "PDFStream"): PDFStream;
   lookup(index: number, type: typeof PDFRawStream): PDFRawStream;
   lookup(index: number, type: typeof PDFRef): PDFRef;
   lookup(index: number, type: typeof PDFString): PDFString;

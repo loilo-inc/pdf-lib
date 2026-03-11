@@ -12,10 +12,9 @@ import PDFHexString from "../objects/PDFHexString";
 import PDFName from "../objects/PDFName";
 import PDFNull from "../objects/PDFNull";
 import PDFNumber from "../objects/PDFNumber";
-import PDFObject, { PDFAsyncObject } from "../objects/PDFObject";
+import PDFObject from "../objects/PDFObject";
 import PDFRawStream from "../objects/PDFRawStream";
 import PDFRef from "../objects/PDFRef";
-import PDFStream from "../objects/PDFStream";
 import PDFString from "../objects/PDFString";
 import PDFContext from "../PDFContext";
 import PDFCatalog from "../structures/PDFCatalog";
@@ -51,7 +50,7 @@ class PDFObjectParser extends BaseParser {
   }
 
   // TODO: Is it possible to reduce duplicate parsing for ref lookaheads?
-  parseObject(): PDFObject | PDFAsyncObject {
+  parseObject(): PDFObject {
     this.skipWhitespaceAndComments();
 
     if (this.matchKeyword(Keywords.true)) return PDFBool.True;
@@ -203,7 +202,7 @@ class PDFObjectParser extends BaseParser {
     }
   }
 
-  protected parseDictOrStream(): PDFDict | PDFStream {
+  protected parseDictOrStream(): PDFDict | PDFRawStream {
     const startPos = this.bytes.position();
 
     const dict = this.parseDict();

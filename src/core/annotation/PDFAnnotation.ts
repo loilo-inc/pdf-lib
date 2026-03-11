@@ -1,9 +1,9 @@
+import PDFArray from "../objects/PDFArray";
 import PDFDict from "../objects/PDFDict";
 import PDFName from "../objects/PDFName";
-import PDFStream from "../objects/PDFStream";
-import PDFArray from "../objects/PDFArray";
-import PDFRef from "../objects/PDFRef";
 import PDFNumber from "../objects/PDFNumber";
+import PDFRef from "../objects/PDFRef";
+import { PDFStream } from "../objects/PDFStream";
 
 class PDFAnnotation {
   readonly dict: PDFDict;
@@ -109,9 +109,9 @@ class PDFAnnotation {
 
     if (!AP) return undefined;
 
-    const N = AP.lookup(PDFName.of("N"), PDFDict, PDFStream);
-    const R = AP.lookupMaybe(PDFName.of("R"), PDFDict, PDFStream);
-    const D = AP.lookupMaybe(PDFName.of("D"), PDFDict, PDFStream);
+    const N = AP.lookup(PDFName.of("N"), PDFDict, "PDFStream");
+    const R = AP.lookupMaybe(PDFName.of("R"), PDFDict, "PDFStream");
+    const D = AP.lookupMaybe(PDFName.of("D"), PDFDict, "PDFStream");
 
     return { normal: N, rollover: R, down: D };
   }

@@ -4,7 +4,7 @@ import PDFName from "../objects/PDFName";
 import PDFNumber from "../objects/PDFNumber";
 import PDFObject from "../objects/PDFObject";
 import PDFRef from "../objects/PDFRef";
-import PDFStream from "../objects/PDFStream";
+import { PDFStream, isPDFStream } from "../objects/PDFStream";
 import PDFContext from "../PDFContext";
 import PDFPageTree from "./PDFPageTree";
 
@@ -206,7 +206,7 @@ class PDFPageLeaf extends PDFDict {
 
     const contentsRef = this.get(PDFName.Contents);
     const contents = this.context.lookup(contentsRef);
-    if (contents instanceof PDFStream) {
+    if (isPDFStream(contents)) {
       this.set(PDFName.Contents, context.obj([contentsRef]));
     }
 

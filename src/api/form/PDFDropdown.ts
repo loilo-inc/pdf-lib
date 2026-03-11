@@ -1,26 +1,26 @@
 import PDFDocument from "../PDFDocument";
-import PDFPage from "../PDFPage";
 import PDFFont from "../PDFFont";
+import PDFPage from "../PDFPage";
+import { rgb } from "../colors";
+import { degrees } from "../rotations";
 import PDFField, {
   FieldAppearanceOptions,
   assertFieldAppearanceOptions,
 } from "./PDFField";
 import {
   AppearanceProviderFor,
-  normalizeAppearance,
   defaultDropdownAppearanceProvider,
+  normalizeAppearance,
 } from "./appearances";
-import { rgb } from "../colors";
-import { degrees } from "../rotations";
 
 import {
+  AcroChoiceFlags,
+  PDFAcroComboBox,
   PDFHexString,
   PDFRef,
   PDFString,
-  PDFStream,
   PDFWidgetAnnotation,
-  PDFAcroComboBox,
-  AcroChoiceFlags,
+  isPDFStream,
 } from "../../core";
 import { assertIs, assertOrUndefined, assertPositive } from "../../utils";
 
@@ -579,8 +579,7 @@ export default class PDFDropdown extends PDFField {
     const widgets = this.acroField.getWidgets();
     for (let idx = 0, len = widgets.length; idx < len; idx++) {
       const widget = widgets[idx];
-      const hasAppearances =
-        widget.getAppearances()?.normal instanceof PDFStream;
+      const hasAppearances = isPDFStream(widget.getAppearances()?.normal);
       if (!hasAppearances) return true;
     }
 

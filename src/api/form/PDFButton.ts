@@ -1,26 +1,22 @@
+import { rgb } from "../colors";
+import { ImageAlignment } from "../image/alignment";
 import PDFDocument from "../PDFDocument";
-import PDFPage from "../PDFPage";
 import PDFFont from "../PDFFont";
 import PDFImage from "../PDFImage";
-import { ImageAlignment } from "../image/alignment";
+import PDFPage from "../PDFPage";
+import { degrees } from "../rotations";
 import {
   AppearanceProviderFor,
-  normalizeAppearance,
   defaultButtonAppearanceProvider,
+  normalizeAppearance,
 } from "./appearances";
 import PDFField, {
   FieldAppearanceOptions,
   assertFieldAppearanceOptions,
 } from "./PDFField";
-import { rgb } from "../colors";
-import { degrees } from "../rotations";
 
-import {
-  PDFRef,
-  PDFStream,
-  PDFAcroPushButton,
-  PDFWidgetAnnotation,
-} from "../../core";
+import { PDFAcroPushButton, PDFRef, PDFWidgetAnnotation } from "../../core";
+import { isPDFStream } from "../../core/objects/PDFStream";
 import { assertIs, assertOrUndefined, assertPositive } from "../../utils";
 
 /**
@@ -199,8 +195,7 @@ export default class PDFButton extends PDFField {
     const widgets = this.acroField.getWidgets();
     for (let idx = 0, len = widgets.length; idx < len; idx++) {
       const widget = widgets[idx];
-      const hasAppearances =
-        widget.getAppearances()?.normal instanceof PDFStream;
+      const hasAppearances = isPDFStream(widget.getAppearances()?.normal);
       if (!hasAppearances) return true;
     }
 

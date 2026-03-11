@@ -1,9 +1,9 @@
 import { arrayAsString } from "../../utils";
 import PDFContext from "../PDFContext";
 import PDFDict from "./PDFDict";
-import PDFStream from "./PDFStream";
+import { PDFSyncStream } from "./PDFStream";
 
-class PDFRawStream extends PDFStream {
+class PDFRawStream extends PDFSyncStream {
   static of = (dict: PDFDict, contents: Uint8Array) =>
     new PDFRawStream(dict, contents);
 
@@ -22,15 +22,15 @@ class PDFRawStream extends PDFStream {
     return PDFRawStream.of(this.dict.clone(context), this.contents.slice());
   }
 
-  async getContentsString(): Promise<string> {
+  getContentsString(): string {
     return arrayAsString(this.contents);
   }
 
-  async getContents(): Promise<Uint8Array> {
+  getContents(): Uint8Array {
     return this.contents;
   }
 
-  async getContentsSize(): Promise<number> {
+  getContentsSize(): number {
     return this.contents.length;
   }
 }

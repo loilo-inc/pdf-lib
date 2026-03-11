@@ -2,13 +2,13 @@ import { AsyncCache } from "../../utils/async-cache";
 import { deflateAsync } from "../../utils/deflate";
 import PDFDict from "../objects/PDFDict";
 import PDFName from "../objects/PDFName";
-import PDFStream from "../objects/PDFStream";
+import { PDFAsyncStream } from "../objects/PDFStream";
 
-abstract class PDFFlateStream extends PDFStream {
+abstract class PDFFlateStream extends PDFAsyncStream {
   protected readonly contentsCache: AsyncCache<Uint8Array>;
   protected readonly encode: boolean;
 
-  constructor(dict: PDFDict, encode: boolean) {
+  protected constructor(dict: PDFDict, encode: boolean) {
     super(dict);
 
     this.encode = encode;
@@ -17,12 +17,12 @@ abstract class PDFFlateStream extends PDFStream {
     this.contentsCache = new AsyncCache(this.computeContents);
   }
 
-  async computeContents(): Promise<Uint8Array> {
+  private readonly computeContents = async (): Promise<Uint8Array> => {
     const unencodedContents = this.getUnencodedContents();
     return this.encode
       ? unencodedContents.then(deflateAsync)
       : unencodedContents;
-  }
+  };
 
   async getContents(): Promise<Uint8Array> {
     return this.contentsCache.access();

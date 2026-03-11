@@ -1,4 +1,3 @@
-import fs from "fs";
 import { describe, expect, it } from "vitest";
 
 import {
@@ -7,10 +6,6 @@ import {
   PDFRef,
   PDFStreamWriter,
 } from "../../../src/index";
-
-const expectedPdfBytes = new Uint8Array(
-  fs.readFileSync("./tests/core/writers/data/stream-writer-1.pdf"),
-);
 
 const contentStreamText = `
   BT
@@ -65,8 +60,12 @@ describe(`PDFStreamWriter`, () => {
       false,
       2,
     ).serializeToBuffer();
-
-    expect(buffer.length).toBe(expectedPdfBytes.length);
-    expect(buffer).toEqual(expectedPdfBytes);
+    expect.addSnapshotSerializer({
+      test: (val) => val instanceof Uint8Array,
+      serialize: (val) => {
+        return new TextDecoder().decode(val);
+      },
+    });
+    expect(buffer).toMatchFileSnapshot("./data/stream-writer-1.pdf");
   });
 });

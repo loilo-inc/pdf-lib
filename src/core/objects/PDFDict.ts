@@ -1,3 +1,5 @@
+import PDFContext from "../PDFContext";
+import CharCodes from "../syntax/CharCodes";
 import PDFArray from "./PDFArray";
 import PDFBool from "./PDFBool";
 import PDFHexString from "./PDFHexString";
@@ -6,10 +8,8 @@ import PDFNull from "./PDFNull";
 import PDFNumber from "./PDFNumber";
 import PDFObject from "./PDFObject";
 import PDFRef from "./PDFRef";
-import PDFStream from "./PDFStream";
+import { PDFStream } from "./PDFStream";
 import PDFString from "./PDFString";
-import PDFContext from "../PDFContext";
-import CharCodes from "../syntax/CharCodes";
 
 export type DictMap = Map<PDFName, PDFObject>;
 
@@ -71,7 +71,7 @@ class PDFDict extends PDFObject {
   lookupMaybe(key: PDFName, type: typeof PDFName): PDFName | undefined;
   lookupMaybe(key: PDFName, type: typeof PDFNull): typeof PDFNull | undefined;
   lookupMaybe(key: PDFName, type: typeof PDFNumber): PDFNumber | undefined;
-  lookupMaybe(key: PDFName, type: typeof PDFStream): PDFStream | undefined;
+  lookupMaybe(key: PDFName, type: "PDFStream"): PDFStream | undefined;
   lookupMaybe(key: PDFName, type: typeof PDFRef): PDFRef | undefined;
   lookupMaybe(key: PDFName, type: typeof PDFString): PDFString | undefined;
   lookupMaybe(
@@ -82,7 +82,7 @@ class PDFDict extends PDFObject {
   lookupMaybe(
     ref: PDFName,
     type1: typeof PDFDict,
-    type2: typeof PDFStream,
+    type2: "PDFStream",
   ): PDFDict | PDFStream | undefined;
   lookupMaybe(
     ref: PDFName,
@@ -115,7 +115,7 @@ class PDFDict extends PDFObject {
   lookup(key: PDFName, type: typeof PDFName): PDFName;
   lookup(key: PDFName, type: typeof PDFNull): typeof PDFNull;
   lookup(key: PDFName, type: typeof PDFNumber): PDFNumber;
-  lookup(key: PDFName, type: typeof PDFStream): PDFStream;
+  lookup(key: PDFName, type: "PDFStream"): PDFStream;
   lookup(key: PDFName, type: typeof PDFRef): PDFRef;
   lookup(key: PDFName, type: typeof PDFString): PDFString;
   lookup(
@@ -126,7 +126,7 @@ class PDFDict extends PDFObject {
   lookup(
     ref: PDFName,
     type1: typeof PDFDict,
-    type2: typeof PDFStream,
+    type2: "PDFStream",
   ): PDFDict | PDFStream;
   lookup(
     ref: PDFName,

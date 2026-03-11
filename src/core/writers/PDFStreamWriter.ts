@@ -6,7 +6,7 @@ import PDFName from "../objects/PDFName";
 import PDFNumber from "../objects/PDFNumber";
 import PDFObject, { PDFAsyncObject } from "../objects/PDFObject";
 import PDFRef from "../objects/PDFRef";
-import PDFStream from "../objects/PDFStream";
+import { isPDFStream } from "../objects/PDFStream";
 import PDFContext from "../PDFContext";
 import PDFCrossRefStream from "../structures/PDFCrossRefStream";
 import PDFObjectStream from "../structures/PDFObjectStream";
@@ -64,7 +64,7 @@ class PDFStreamWriter extends PDFWriter {
 
       const shouldNotCompress =
         ref === this.context.trailerInfo.Encrypt ||
-        object instanceof PDFStream ||
+        isPDFStream(object) ||
         object instanceof PDFInvalidObject ||
         ref.generationNumber !== 0;
 

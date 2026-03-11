@@ -1,6 +1,6 @@
 import fontkit from "@pdf-lib/fontkit";
-import { Assets } from "..";
 import { ParseSpeeds, PDFDocument, rgb } from "../../../src";
+import { Assets } from "../index";
 
 export default async (assets: Assets) => {
   const { pdfs, fonts, images } = assets;

@@ -1,4 +1,3 @@
-import { Assets } from "..";
 import {
   degrees,
   LineCapStyle,
@@ -7,6 +6,7 @@ import {
   rgb,
   StandardFonts,
 } from "../../../src";
+import { Assets } from "../index";
 
 export default async (assets: Assets) => {
   const { pdfs, images } = assets;
@@ -111,14 +111,16 @@ export default async (assets: Assets) => {
     lineCap: LineCapStyle.Round,
   });
 
-  console.log("Title:", pdfDoc.getTitle());
-  console.log("Author:", pdfDoc.getAuthor());
-  console.log("Subject:", pdfDoc.getSubject());
-  console.log("Creator:", pdfDoc.getCreator());
-  console.log("Keywords:", pdfDoc.getKeywords());
-  console.log("Producer:", pdfDoc.getProducer());
-  console.log("Creation Date:", pdfDoc.getCreationDate());
-  console.log("Modification Date:", pdfDoc.getModificationDate());
+  if (process.env.NODE_ENV !== "test") {
+    console.log("Title:", pdfDoc.getTitle());
+    console.log("Author:", pdfDoc.getAuthor());
+    console.log("Subject:", pdfDoc.getSubject());
+    console.log("Creator:", pdfDoc.getCreator());
+    console.log("Keywords:", pdfDoc.getKeywords());
+    console.log("Producer:", pdfDoc.getProducer());
+    console.log("Creation Date:", pdfDoc.getCreationDate());
+    console.log("Modification Date:", pdfDoc.getModificationDate());
+  }
 
   const base64Pdf = await pdfDoc.saveAsBase64();
 

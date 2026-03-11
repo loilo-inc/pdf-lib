@@ -1,4 +1,3 @@
-import { Assets } from "..";
 import {
   degrees,
   drawEllipse,
@@ -10,6 +9,7 @@ import {
   rgb,
   StandardFonts,
 } from "../../../src";
+import { Assets } from "../index";
 
 import fontkit from "@pdf-lib/fontkit";
 

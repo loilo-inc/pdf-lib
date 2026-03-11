@@ -64,7 +64,7 @@ const readImage = (image: string) => fs.readFileSync(`assets/images/${image}`);
 
 const readPdf = (pdf: string) => fs.readFileSync(`assets/pdfs/${pdf}`);
 
-const assets = {
+export const assets = {
   fonts: {
     ttf: {
       ubuntu_r: readFont("ubuntu/Ubuntu-R.ttf"),
@@ -187,4 +187,6 @@ const main = async () => {
   }
 };
 
-main();
+if (require.main === module) {
+  main();
+}

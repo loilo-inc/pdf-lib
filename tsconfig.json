@@ -17,5 +17,5 @@
     "esModuleInterop": true,
     "preserveSymlinks": true
   },
-  "include": ["src/**/*", "tests/**/*"]
+  "include": ["src/**/*", "tests/**/*", "apps/node/**/*"]
 }

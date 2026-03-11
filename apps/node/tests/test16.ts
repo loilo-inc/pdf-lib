@@ -1,5 +1,5 @@
-import { Assets } from "..";
 import { PDFDocument } from "../../../src";
+import { Assets } from "../index";
 
 const fieldNames = {
   // Page 1

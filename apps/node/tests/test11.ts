@@ -1,5 +1,4 @@
 import fontkit from "@pdf-lib/fontkit";
-import { Assets } from "..";
 import {
   charAtIndex,
   last,
@@ -7,6 +6,7 @@ import {
   PDFFont,
   StandardFonts,
 } from "../../../src";
+import { Assets } from "../index";
 
 const breakTextIntoLines = (
   text: string,

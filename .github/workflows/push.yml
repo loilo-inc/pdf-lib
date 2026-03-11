@@ -1,9 +1,11 @@
-name: Push CI
+name: CI
 on:
   push:
     branches:
       - main
-      - develop
+  pull_request:
+    branches:
+      - "**"
 jobs:
   test:
     runs-on: ubuntu-latest
@@ -12,10 +14,13 @@ jobs:
       - uses: actions/setup-node@v6
         with:
           node-version: 24
-          cache: 'npm'
+          cache: "npm"
       - run: npm ci
       - run: npm run lint
-      - name: Run tests
-        run: npm test
-      - name: Build
-        run: npm run build
+      - run: npm run tsc
+      - run: npm run apps:web:tsc
+      - run: npm testcov
+      - uses: codecov/codecov-action@v5
+        with:
+          token: ${{ secrets.CODECOV_TOKEN }}
+          files: coverage/coverage-final.json

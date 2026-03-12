@@ -1,8 +1,9 @@
-import { Assets } from "..";
 import { PDFDocument, rgb, TextAlignment } from "../../../src";
+import { Assets } from "../index";
 
 export default async (assets: Assets) => {
   const pdfDoc = await PDFDocument.load(assets.pdfs.dod_character);
+  pdfDoc.setModificationDate(new Date("2018-12-21T07:00:11.000Z"));
 
   const marioImage = await pdfDoc.embedPng(assets.images.png.small_mario);
   const emblemImage = await pdfDoc.embedPng(assets.images.png.mario_emblem);

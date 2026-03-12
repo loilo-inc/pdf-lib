@@ -1,8 +1,9 @@
-import { Assets } from "..";
 import { degrees, ParseSpeeds, PDFDocument, StandardFonts } from "../../../src";
+import { Assets } from "../index";
 
 const createDonorPdf = async () => {
   const pdfDoc = await PDFDocument.create();
+  pdfDoc.setModificationDate(new Date("2018-12-21T07:00:11.000Z"));
   const helveticaFont = await pdfDoc.embedFont(StandardFonts.Helvetica);
 
   const page = pdfDoc.addPage([500, 500]);
@@ -50,15 +51,17 @@ export default async (assets: Assets) => {
     sizeOfAllDonorPdfs += allDonorPdfBytes[idx].length;
   }
 
-  console.log();
-  console.log(
-    "Since pdf-lib only copies the minimum necessary resources from a donor PDF needed to show a copied page, the size of the PDF we create from copied pages should be smaller than the size of all the donor PDFs added together:",
-  );
-  console.log();
-  console.log(
-    "  sizeOfRecipientPdf / sizeOfAllDonorPdfs = ",
-    (sizeOfCreatedPdf / sizeOfAllDonorPdfs).toFixed(2),
-  );
+  if (process.env.NODE_ENV !== "test") {
+    console.log();
+    console.log(
+      "Since pdf-lib only copies the minimum necessary resources from a donor PDF needed to show a copied page, the size of the PDF we create from copied pages should be smaller than the size of all the donor PDFs added together:",
+    );
+    console.log();
+    console.log(
+      "  sizeOfRecipientPdf / sizeOfAllDonorPdfs = ",
+      (sizeOfCreatedPdf / sizeOfAllDonorPdfs).toFixed(2),
+    );
+  }
 
   return savedBytes;
 };

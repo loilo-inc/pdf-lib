@@ -1,7 +1,7 @@
 import fs from "fs";
 
-import { Assets } from "..";
 import { PDFDocument, rgb } from "../../../src";
+import { Assets } from "../index";
 
 // prettier-ignore
 const pngSuite = [
@@ -50,6 +50,7 @@ const pngSuite = [
 
 export default async (assets: Assets) => {
   const pdfDoc = await PDFDocument.create();
+  pdfDoc.setModificationDate(new Date("2018-12-21T07:00:11.000Z"));
 
   const page = pdfDoc.addPage();
 

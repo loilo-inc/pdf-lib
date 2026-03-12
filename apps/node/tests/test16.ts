@@ -1,5 +1,5 @@
-import { Assets } from "..";
 import { PDFDocument } from "../../../src";
+import { Assets } from "../index";
 
 const fieldNames = {
   // Page 1
@@ -189,6 +189,7 @@ const fieldNames = {
 
 export default async (assets: Assets) => {
   const pdfDoc = await PDFDocument.load(assets.pdfs.with_xfa_fields);
+  pdfDoc.setModificationDate(new Date("2018-12-21T07:00:11.000Z"));
 
   const form = pdfDoc.getForm();
 

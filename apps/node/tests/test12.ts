@@ -1,4 +1,3 @@
-import { Assets } from "..";
 import {
   BlendMode,
   cmyk,
@@ -9,6 +8,7 @@ import {
   rgb,
   values,
 } from "../../../src";
+import { Assets } from "../index";
 
 const inchToPt = (inches: number) => Math.round(inches * 72);
 
@@ -271,6 +271,7 @@ const thirdPage = async (pdfDoc: PDFDocument, assets: Assets) => {
 
 export default async (assets: Assets) => {
   const pdfDoc = await PDFDocument.create();
+  pdfDoc.setModificationDate(new Date("2018-12-21T07:00:11.000Z"));
   await firstPage(pdfDoc);
   await secondPage(pdfDoc);
   await thirdPage(pdfDoc, assets);

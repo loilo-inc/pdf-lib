@@ -1,5 +1,4 @@
 import fontkit from "@pdf-lib/fontkit";
-import { Assets } from "..";
 import {
   charAtIndex,
   last,
@@ -7,6 +6,7 @@ import {
   PDFFont,
   StandardFonts,
 } from "../../../src";
+import { Assets } from "../index";
 
 const breakTextIntoLines = (
   text: string,
@@ -57,7 +57,7 @@ export default async (assets: Assets) => {
   const { fonts } = assets;
 
   const pdfDoc = await PDFDocument.create();
-
+  pdfDoc.setModificationDate(new Date("2018-12-21T07:00:11.000Z"));
   pdfDoc.registerFontkit(fontkit);
 
   const helveticaFont = await pdfDoc.embedFont(StandardFonts.Helvetica);
